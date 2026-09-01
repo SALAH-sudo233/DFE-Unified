@@ -1,0 +1,13 @@
+{
+  "dataset": "CrossDocked Pocket10 processed data",
+  "redistributed": false,
+  "expected_dataset_path": "data/crossdocked_pocket10",
+  "expected_split_path": "data/split_by_name.pt",
+  "observed_processed_lmdb_size": 3757457408,
+  "observed_name2id_size": 26121031,
+  "observed_split": {
+    "sha256": "7ba210bc9b8a89034b8e189f26dd055141b0cbcc7aab66898d68e84140ad6e3b",
+    "size": 15284527
+  },
+  "scope_note": "Values describe files observed on the research server; dataset bytes are not included."
+}

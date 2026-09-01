@@ -1,5 +1,6 @@
 *
 !*.md
+!crossdocked-manifest.json
 !test_list.tsv
 !/crossdocked_pocket10
 !/crossdocked_pocket10/*.md

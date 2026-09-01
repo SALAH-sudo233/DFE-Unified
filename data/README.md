@@ -1,15 +1,23 @@
-# Datasets
+# External dataset provenance
 
-We trained/tested Pocket2Mol using the same data sets as [SBDD](https://github.com/luost26/3D-Generative-SBDD) model.
+No CrossDocked or PDBBind dataset content is redistributed in this repository.
+The retained DF training configuration expects:
 
-1. Download the dataset archive `crossdocked_pocket10.tar.gz` and the split file `split_by_name.pt` from [this link](https://drive.google.com/drive/folders/1CzwxmTpjbrt83z_wBzcQncq84OVDPurM).
-2. Extract the TAR archive using the command: `tar -xzvf crossdocked_pocket10.tar.gz`.
+```text
+data/crossdocked_pocket10/
+data/split_by_name.pt
+```
 
-<!-- # Training, validaation and test data of Pocket2Mol
+The source server contained a processed CrossDocked LMDB of 3,757,457,408
+bytes and a `name2id` file of 26,121,031 bytes. The observed split file was
+15,284,527 bytes with SHA-256
+`7ba210bc9b8a89034b8e189f26dd055141b0cbcc7aab66898d68e84140ad6e3b`.
+These observations identify the inputs but do not establish a public download's
+byte-for-byte identity unless its hashes are checked independently.
 
-The data is available at https://drive.google.com/drive/folders/129CnEWkgM6PyF9MCiFYmE-kyTOGJ-BbL?usp=sharing
+The upstream Pocket2Mol instructions point to the CrossDocked Pocket10 data used
+by the 3D-Generative-SBDD work. Consult the dataset owners' terms and the
+upstream project for access. PDBBind data was referenced by evaluation tooling
+on the research server but is not included here.
 
-1. Download the data archieve `data.tar.gz`.
-2. Extract the archive using the command: `tar -xvzf data.tar.gz` and put the three files in this `data` directory.
-
-(NOTE: This is the preview version. In the future, we will change the format of the data.) -->
+Machine-readable observations are in `crossdocked-manifest.json`.
