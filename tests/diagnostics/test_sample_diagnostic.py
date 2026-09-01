@@ -5,6 +5,7 @@ from pathlib import Path
 
 from dfe.diagnostics.ledger import AttemptLedger, replay_ledger
 from sample_diagnostic import (
+    _attempt_payload,
     load_declared_job,
     predeclare_attempts,
     recover_interrupted_attempt,
@@ -12,6 +13,18 @@ from sample_diagnostic import (
 
 
 class DiagnosticSamplerContractTests(unittest.TestCase):
+    def test_attempt_payload_preserves_arm_id_for_d5_gate_variants(self):
+        job = {
+            "job_id": "main:10gs:20260901:D5-g0.25",
+            "pocket_id": "10gs",
+            "seed": 20260901,
+            "intervention": "D5",
+            "arm_id": "D5-g0.25",
+        }
+        payload = _attempt_payload("run", job, 0, "requested")
+        self.assertEqual(payload["intervention"], "D5")
+        self.assertEqual(payload["arm_id"], "D5-g0.25")
+
     def test_smoke_job_predeclares_exactly_ten_attempts(self):
         job = {
             "job_id": "smoke:10gs:20260901:D0",
@@ -57,6 +70,7 @@ class DiagnosticSamplerContractTests(unittest.TestCase):
             "job_id": "main:10gs:20260901:D0",
             "pocket_id": "10gs",
             "seed": 20260901,
+            "intervention": "D0",
             "arm_id": "D0",
         }
         with tempfile.TemporaryDirectory() as tmp:

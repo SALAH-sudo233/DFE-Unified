@@ -73,6 +73,8 @@ def _attempt_payload(
         {
             "schema_version": "phase0.v1",
             "job_id": job["job_id"],
+            "intervention": job["intervention"],
+            "arm_id": job["arm_id"],
             "status": status,
             "rng_seed": int(job["seed"]) + sample_index,
             **fields,
@@ -546,7 +548,9 @@ def _run_attempt(
                             "evaluated",
                             smiles=smiles,
                             duplicate=duplicate,
+                            candidate_path=str(candidate_path.relative_to(run_root).as_posix()),
                             candidate_sha256=sha256_file(candidate_path),
+                            sdf_path=str(sdf_path.relative_to(run_root).as_posix()),
                             sdf_sha256=sha256_file(sdf_path),
                         )
                     )

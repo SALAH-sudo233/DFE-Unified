@@ -43,6 +43,13 @@ class MetricsTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "unknown failure code"):
             summarize_attempts([{"attempt_id": "bad", "status": "failed", "error_code": "mystery"}])
 
+    def test_d5_gate_variants_remain_distinct_group_keys(self):
+        from dfe.diagnostics.metrics import aggregation_key
+
+        low = {"pocket_id": "10gs", "seed": 1, "arm_id": "D5-g0.25"}
+        high = {"pocket_id": "10gs", "seed": 1, "arm_id": "D5-g1.5"}
+        self.assertNotEqual(aggregation_key(low), aggregation_key(high))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -22,6 +22,10 @@ FAILURE_CODES = {
 }
 
 
+def aggregation_key(record: Mapping[str, object]) -> tuple[object, object, object]:
+    return record["pocket_id"], record["seed"], record["arm_id"]
+
+
 def _rate(numerator: int, denominator: int, *, computable: int | None = None):
     value: dict[str, object] = {
         "numerator": numerator,

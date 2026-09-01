@@ -20,6 +20,7 @@ from dfe.diagnostics.io import sha256_file  # noqa: E402
 from dfe.diagnostics.ledger import replay_ledger  # noqa: E402
 from dfe.diagnostics.metrics import (  # noqa: E402
     METRIC_DEFINITION_VERSION,
+    aggregation_key,
     summarize_attempts,
     terminal_attempt_records,
 )
@@ -89,13 +90,7 @@ def summarize(manifest_path: Path) -> dict[str, object]:
 
     grouped: dict[tuple[object, ...], list[dict[str, object]]] = defaultdict(list)
     for record in attempts:
-        grouped[
-            (
-                record["pocket_id"],
-                record["seed"],
-                record["intervention"],
-            )
-        ].append(record)
+        grouped[aggregation_key(record)].append(record)
     pocket_seed_rows = [
         _flatten_summary(
             {"pocket_id": key[0], "seed": key[1], "intervention": key[2]},
@@ -105,7 +100,7 @@ def summarize(manifest_path: Path) -> dict[str, object]:
     ]
     pocket_groups: dict[tuple[object, ...], list[dict[str, object]]] = defaultdict(list)
     for record in attempts:
-        pocket_groups[(record["pocket_id"], record["intervention"])].append(record)
+        pocket_groups[(record["pocket_id"], record["arm_id"])].append(record)
     pocket_rows = [
         _flatten_summary(
             {"pocket_id": key[0], "intervention": key[1]},
