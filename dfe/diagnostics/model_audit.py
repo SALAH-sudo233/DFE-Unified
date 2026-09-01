@@ -44,6 +44,8 @@ class EventAudit:
     absolute_median: float | None = None
     absolute_p95: float | None = None
     mismatch_count: int | None = None
+    reference_shape: tuple[int, ...] | None = None
+    transformed_shape: tuple[int, ...] | None = None
 
     def to_dict(self) -> dict[str, object]:
         return asdict(self)
@@ -126,16 +128,23 @@ def compare_event_sets(
         law = EVENT_LAWS[event]
         expected = reference.get(step, event).numpy()
         actual = transformed.get(step, event).numpy()
-        if law == "exact":
+        if actual.shape != expected.shape:
+            audit = EventAudit(
+                key=key,
+                law="shape_mismatch",
+                passed=False,
+                mismatch_count=abs(actual.size - expected.size),
+                reference_shape=tuple(expected.shape),
+                transformed_shape=tuple(actual.shape),
+            )
+        elif law == "exact":
             mismatch_count = (
                 int(np.count_nonzero(actual != expected))
-                if actual.shape == expected.shape
-                else max(actual.size, expected.size)
             )
             audit = EventAudit(
                 key=key,
                 law=law,
-                passed=actual.shape == expected.shape and mismatch_count == 0,
+                passed=mismatch_count == 0,
                 mismatch_count=mismatch_count,
             )
         elif law == "equivariant":

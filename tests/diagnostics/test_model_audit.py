@@ -120,6 +120,27 @@ class ModelAuditTests(unittest.TestCase):
         self.assertEqual(report.first_failure, "0:frontier.indices")
         self.assertEqual(report.events[-1].law, "missing_event")
 
+    def test_numeric_shape_divergence_is_recorded_and_later_events_continue(self):
+        reference = TensorObserver()
+        transformed = TensorObserver()
+        reference.observe(0, "encoder.vector", torch.ones(36, 3, 3))
+        transformed.observe(0, "encoder.vector", torch.ones(38, 3, 3))
+        reference.observe(0, "element.probability", torch.tensor([0.5]))
+        transformed.observe(0, "element.probability", torch.tensor([0.5]))
+        report = compare_event_sets(
+            reference,
+            transformed,
+            self.rotation,
+            self.translation,
+            tolerance=1e-6,
+        )
+        self.assertFalse(report.passed)
+        self.assertEqual(report.first_failure, "0:encoder.vector")
+        self.assertEqual(report.events[0].law, "shape_mismatch")
+        self.assertEqual(report.events[0].reference_shape, (36, 3, 3))
+        self.assertEqual(report.events[0].transformed_shape, (38, 3, 3))
+        self.assertTrue(report.events[1].passed)
+
     def test_analytical_df_raw_features_pass_float64_rigid_transform(self):
         module = AnalyticalDirectionField(hidden_dim=8).double()
         query = torch.tensor([[0.0, 0.0, 0.0], [1.0, 2.0, -1.0]], dtype=torch.float64)
