@@ -1,5 +1,6 @@
 import json
 import math
+import os
 import tempfile
 import unittest
 from pathlib import Path
@@ -20,6 +21,34 @@ IDENTITY = {
 
 
 class TraceTests(unittest.TestCase):
+    def test_tensor_events_batch_until_a_durable_decision_boundary(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "events.jsonl"
+            with TraceWriter(path) as writer:
+                writer.append(
+                    TraceEvent.new(
+                        **IDENTITY,
+                        step=0,
+                        event="encoder.scalar",
+                        tensor={"count": 1},
+                        monotonic_ns=10,
+                    ),
+                    durable=False,
+                )
+                self.assertEqual(writer.durable_event_count, 0)
+                writer.append(
+                    TraceEvent.new(
+                        **IDENTITY,
+                        step=0,
+                        event="queue.initialized",
+                        decision={"queue_size": 1},
+                        monotonic_ns=11,
+                    )
+                )
+                self.assertEqual(writer.durable_event_count, 2)
+            rows = path.read_text(encoding="ascii").splitlines()
+        self.assertEqual(len(rows), 2)
+
     def test_tensor_summary_is_finite_and_records_empty_shape(self):
         summary = summarize_tensor(torch.empty((0, 3)))
         self.assertEqual(summary["shape"], [0, 3])

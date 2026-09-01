@@ -312,7 +312,8 @@ class AttemptTracer:
                 event=event,
                 monotonic_ns=self._time(),
                 tensor=summarize_tensor(value),
-            )
+            ),
+            durable=False,
         )
 
     def decision(self, step: int, event: str, value: Mapping[str, object]) -> None:

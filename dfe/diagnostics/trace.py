@@ -107,26 +107,42 @@ class TraceWriter:
         self.path = Path(path)
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self._last_monotonic_ns = -1
+        self._event_count = 0
+        self._durable_event_count = 0
         if resume and self.path.exists():
             lines = self.path.read_text(encoding="ascii").splitlines()
             if lines:
                 self._last_monotonic_ns = int(json.loads(lines[-1])["monotonic_ns"])
+            self._event_count = len(lines)
+            self._durable_event_count = len(lines)
         self._handle: IO[bytes] = self.path.open("ab" if resume else "xb")
 
-    def append(self, event: TraceEvent) -> None:
+    def append(self, event: TraceEvent, *, durable: bool = True) -> None:
         if event.monotonic_ns <= self._last_monotonic_ns:
             raise ValueError("trace monotonic_ns must increase strictly")
         self._handle.write(canonical_json(event.to_dict()))
+        self._event_count += 1
+        if durable:
+            self.flush()
+        self._last_monotonic_ns = event.monotonic_ns
+
+    def flush(self) -> None:
         self._handle.flush()
         os.fsync(self._handle.fileno())
-        self._last_monotonic_ns = event.monotonic_ns
+        self._durable_event_count = self._event_count
 
     @property
     def last_monotonic_ns(self) -> int:
         return self._last_monotonic_ns
 
+    @property
+    def durable_event_count(self) -> int:
+        return self._durable_event_count
+
     def close(self) -> None:
         if not self._handle.closed:
+            if self._durable_event_count != self._event_count:
+                self.flush()
             self._handle.close()
 
     def __enter__(self) -> "TraceWriter":
