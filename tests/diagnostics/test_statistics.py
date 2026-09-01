@@ -6,6 +6,7 @@ from dfe.diagnostics.statistics import (
     benjamini_hochberg,
     cluster_bootstrap_ci,
     fit_openness_interaction,
+    phase0_gate,
     paired_effect,
     sample_pocket_clusters,
     smoke_gate,
@@ -99,6 +100,32 @@ class StatisticsTests(unittest.TestCase):
         self.assertEqual(gate["retained_arm_ids"], ["D0", "D1", "D2"])
         incomplete = dict(complete, terminal_job_count=53)
         self.assertEqual(smoke_gate(incomplete, retained_arm_ids=[])["status"], "fail")
+
+    def test_phase0_gate_requires_every_declared_main_job(self):
+        complete = {
+            "expected_job_count": 270,
+            "terminal_job_count": 270,
+            "expected_attempts_per_job": 20,
+            "jobs_with_exact_attempt_count": 270,
+            "finite_traces": True,
+            "clean_replay": True,
+            "output_hashes_valid": True,
+            "summary_artifacts_valid": True,
+        }
+        gate = phase0_gate(complete, se3_hypothesis="fail", analysis=[])
+        self.assertEqual(gate["status"], "pass")
+        self.assertEqual(gate["se3_hypothesis"], "fail")
+        incomplete = dict(complete, terminal_job_count=269)
+        self.assertEqual(
+            phase0_gate(incomplete, se3_hypothesis="inconclusive", analysis=[])["status"],
+            "fail",
+        )
+        empty = dict(complete, expected_job_count=0, terminal_job_count=0,
+                     jobs_with_exact_attempt_count=0)
+        self.assertEqual(
+            phase0_gate(empty, se3_hypothesis="fail", analysis=[])["status"],
+            "fail",
+        )
 
 
 if __name__ == "__main__":

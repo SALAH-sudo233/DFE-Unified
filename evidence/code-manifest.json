@@ -88,6 +88,8 @@
       "path": "sample.py",
       "remote_mtime_epoch": 1787303535,
       "remote_path": "/workspace/ayb/Pocket2Mol/sample.py",
+      "repository_sha256": "e8b4c173531cac66490c0b81b2f1942192c1042608887725de6a2c6e29258913",
+      "repository_size": 12703,
       "sha256": "84df66a6563ea3493db2dbd2f68be5a9f3e36feb99e1e6022374963271b62cbe",
       "size": 13145
     },

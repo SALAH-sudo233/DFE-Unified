@@ -95,6 +95,58 @@ def predeclare_attempts(
             )
 
 
+def close_requested_after_bootstrap_failure(
+    path: Path,
+    run_id: str,
+    job: Mapping[str, object],
+    message: str,
+) -> None:
+    with AttemptLedger(path, resume=True) as ledger:
+        for sample_index in range(int(job["attempt_count"])):
+            attempt_id = AttemptRecord.new(
+                run_id,
+                str(job["pocket_id"]),
+                int(job["seed"]),
+                str(job["arm_id"]),
+                sample_index,
+            ).attempt_id
+            if ledger.states.get(attempt_id) == "requested":
+                _append_failure(
+                    ledger,
+                    run_id,
+                    job,
+                    sample_index,
+                    "runtime_error",
+                    message,
+                )
+
+
+def classify_initial_queue(queue, finished_status: str) -> str | None:
+    if not queue:
+        return "init_threshold_exhausted"
+    if all(
+        candidate.status == finished_status
+        and len(getattr(candidate, "ligand_context_pos", ())) == 0
+        for candidate in queue
+    ):
+        return "init_no_frontier"
+    return None
+
+
+def parity_projection(record: Mapping[str, object]) -> dict[str, object]:
+    return {
+        "status": record.get("status"),
+        "error_code": record.get("error_code"),
+        "has_smiles": bool(record.get("smiles")),
+    }
+
+
+def _write_sdf(chem, molecule, path: Path) -> None:
+    chem.MolToMolFile(molecule, str(path))
+    if not path.is_file() or path.stat().st_size == 0:
+        raise OSError("SDF writer did not create a non-empty file")
+
+
 def _atomic_checkpoint(path: Path, value: object) -> None:
     temporary = path.with_suffix(path.suffix + ".tmp")
     with temporary.open("xb") as handle:
@@ -366,7 +418,7 @@ def recover_interrupted_attempt(
                 sample_index,
                 "evaluated",
                 evaluation_status="failed",
-                error_code="interrupted_after_reconstruction",
+                error_code="runtime_error",
                 error_message=message,
             )
         )
@@ -376,7 +428,7 @@ def recover_interrupted_attempt(
             run_id,
             job,
             sample_index,
-            "interrupted",
+            "runtime_error",
             message,
         )
     recovery_path = Path(job_root) / "recovery.jsonl"
@@ -451,6 +503,7 @@ def _run_attempt(
     wrong_data,
     known_smiles: set[str],
     device: str,
+    diagnostics_enabled: bool = True,
 ) -> None:
     run_id = str(manifest["run_id"])
     attempt_id = str(
@@ -470,37 +523,55 @@ def _run_attempt(
     data = runtime["transform_data"](copy.deepcopy(base_data), runtime["masking"])
     ledger.append(_attempt_payload(run_id, job, sample_index, "initialized"))
     tracer.decision(0, "attempt.initialized", {"queue_size": 0})
-    _configure_diagnostics(
-        runtime,
-        data,
-        job,
-        0,
-        tracer,
-        wrong_data,
-        pocket_record,
-        wrong_record,
-    )
+    if diagnostics_enabled:
+        _configure_diagnostics(
+            runtime,
+            data,
+            job,
+            0,
+            tracer,
+            wrong_data,
+            pocket_record,
+            wrong_record,
+        )
+    else:
+        runtime["model"].set_diagnostics(None, None)
     ledger.append(_attempt_payload(run_id, job, sample_index, "sampling"))
     queue = runtime["get_init"](
         data.to(device), runtime["model"], runtime["composer"], threshold
     )
     queue = queue[: int(runtime["policy"].sample.beam_size)]
     tracer.decision(0, "queue.initialized", {"queue_size": len(queue)})
+    initial_failure = classify_initial_queue(queue, runtime["STATUS_FINISHED"])
+    if initial_failure is not None:
+        _append_failure(
+            ledger,
+            run_id,
+            job,
+            sample_index,
+            initial_failure,
+            "initialization produced no runnable ligand candidate",
+        )
+        tracer.decision(0, "attempt.failed", {"reason": initial_failure})
+        return
     max_steps = int(runtime["policy"].sample.max_steps)
     for step in range(1, max_steps + 1):
         queue_tmp = []
         queue_weights = []
         for parent in queue:
-            _configure_diagnostics(
-                runtime,
-                parent,
-                job,
-                step,
-                tracer,
-                wrong_data,
-                pocket_record,
-                wrong_record,
-            )
+            if diagnostics_enabled:
+                _configure_diagnostics(
+                    runtime,
+                    parent,
+                    job,
+                    step,
+                    tracer,
+                    wrong_data,
+                    pocket_record,
+                    wrong_record,
+                )
+            else:
+                runtime["model"].set_diagnostics(None, None)
             candidates = runtime["get_next"](
                 parent.to(device), runtime["model"], runtime["composer"], threshold
             )
@@ -539,7 +610,26 @@ def _run_attempt(
                     torch.save(candidate, candidate_path)
                     sdf_path = job_root / "sdf" / f"{sample_index:04d}.sdf"
                     sdf_path.parent.mkdir(parents=True, exist_ok=True)
-                    runtime["Chem"].MolToMolFile(molecule, str(sdf_path))
+                    try:
+                        _write_sdf(runtime["Chem"], molecule, sdf_path)
+                    except Exception as exc:
+                        ledger.append(
+                            _attempt_payload(
+                                run_id,
+                                job,
+                                sample_index,
+                                "evaluated",
+                                evaluation_status="failed",
+                                error_code="sdf_write_error",
+                                error_message=f"{type(exc).__name__}: {exc}"[:500],
+                            )
+                        )
+                        tracer.decision(
+                            step,
+                            "attempt.failed",
+                            {"reason": "sdf_write_error"},
+                        )
+                        return
                     ledger.append(
                         _attempt_payload(
                             run_id,
@@ -615,15 +705,26 @@ def run_job(
     terminal = {
         attempt_id for attempt_id, status in replay.states.items() if status in {"evaluated", "failed"}
     }
-    runtime = _load_runtime(manifest, device)
-    pockets = _pocket_by_id(run_root, manifest)
-    pocket_record = pockets[str(job["pocket_id"])]
-    base_data = _build_pocket_data(runtime, pocket_record)
-    wrong_record = None
-    wrong_data = None
-    if job["intervention"] == "D4":
-        wrong_record = pockets[_d4_pair(run_root, str(job["pocket_id"]))]
-        wrong_data = _build_pocket_data(runtime, wrong_record)
+    try:
+        runtime = _load_runtime(manifest, device)
+        pockets = _pocket_by_id(run_root, manifest)
+        pocket_record = pockets[str(job["pocket_id"])]
+        base_data = _build_pocket_data(runtime, pocket_record)
+        wrong_record = None
+        wrong_data = None
+        if job["intervention"] == "D4":
+            wrong_record = pockets[_d4_pair(run_root, str(job["pocket_id"]))]
+            wrong_data = _build_pocket_data(runtime, wrong_record)
+    except Exception as exc:
+        with (job_root / "exceptions.log").open("a", encoding="utf-8") as handle:
+            handle.write(f"\n[bootstrap]\n{traceback.format_exc()}\n")
+        close_requested_after_bootstrap_failure(
+            attempts_path,
+            str(manifest["run_id"]),
+            job,
+            f"{type(exc).__name__}: {exc}",
+        )
+        raise
     known_smiles = {
         str(record["smiles"])
         for record in replay.records

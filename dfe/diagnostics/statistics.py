@@ -144,6 +144,8 @@ def smoke_gate(
     evidence: Mapping[str, object], *, retained_arm_ids: Iterable[str]
 ) -> dict[str, object]:
     checks = {
+        "jobs_declared": isinstance(evidence.get("expected_job_count"), int)
+        and evidence.get("expected_job_count", 0) > 0,
         "all_jobs_terminal": evidence.get("terminal_job_count")
         == evidence.get("expected_job_count"),
         "exact_attempt_counts": evidence.get("jobs_with_exact_attempt_count")
@@ -159,4 +161,30 @@ def smoke_gate(
         "checks": checks,
         "evidence": dict(evidence),
         "retained_arm_ids": list(retained_arm_ids),
+    }
+
+
+def phase0_gate(
+    evidence: Mapping[str, object], *, se3_hypothesis: str, analysis: object
+) -> dict[str, object]:
+    checks = {
+        "jobs_declared": isinstance(evidence.get("expected_job_count"), int)
+        and evidence.get("expected_job_count", 0) > 0,
+        "all_jobs_terminal": evidence.get("terminal_job_count")
+        == evidence.get("expected_job_count"),
+        "exact_attempt_counts": evidence.get("jobs_with_exact_attempt_count")
+        == evidence.get("expected_job_count"),
+        "twenty_attempts_per_job": evidence.get("expected_attempts_per_job") == 20,
+        "finite_traces": evidence.get("finite_traces") is True,
+        "clean_replay": evidence.get("clean_replay") is True,
+        "output_hashes": evidence.get("output_hashes_valid") is True,
+        "summary_artifacts": evidence.get("summary_artifacts_valid") is True,
+    }
+    return {
+        "status": "pass" if all(checks.values()) else "fail",
+        "artifact_completeness": all(checks.values()),
+        "checks": checks,
+        "evidence": dict(evidence),
+        "se3_hypothesis": se3_hypothesis,
+        "analysis": analysis,
     }

@@ -19,6 +19,7 @@ FAILURE_CODES = {
     "sdf_write_error",
     "docking_error",
     "posebusters_error",
+    "runtime_error",
 }
 
 
@@ -48,7 +49,9 @@ def summarize_attempts(attempts: Iterable[Mapping[str, object]]) -> dict[str, ob
     valid = [
         record
         for record in records
-        if record.get("status") == "evaluated" and bool(record.get("smiles"))
+        if record.get("status") == "evaluated"
+        and record.get("evaluation_status") != "failed"
+        and bool(record.get("smiles"))
     ]
     docked = [record for record in records if record.get("docking_score") is not None]
     pose_computable = [record for record in records if record.get("posebusters_pass") is not None]

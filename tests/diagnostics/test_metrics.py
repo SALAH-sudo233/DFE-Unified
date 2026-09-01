@@ -4,6 +4,24 @@ from dfe.diagnostics.metrics import summarize_attempts
 
 
 class MetricsTests(unittest.TestCase):
+    def test_runtime_and_evaluation_failures_remain_in_denominator(self):
+        attempts = [
+            {"attempt_id": "a0", "status": "failed", "error_code": "runtime_error"},
+            {
+                "attempt_id": "a1",
+                "status": "evaluated",
+                "smiles": "CC",
+                "evaluation_status": "failed",
+                "error_code": "sdf_write_error",
+            },
+        ]
+        summary = summarize_attempts(attempts)
+        self.assertEqual(summary["validity"]["numerator"], 0)
+        self.assertEqual(
+            summary["failure_taxonomy"],
+            {"runtime_error": 1, "sdf_write_error": 1},
+        )
+
     def test_end_to_end_denominators_include_all_requested_attempts(self):
         attempts = []
         for index in range(10):

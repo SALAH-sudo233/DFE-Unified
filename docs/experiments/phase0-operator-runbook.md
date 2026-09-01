@@ -81,17 +81,22 @@ python scripts/run_phase0_jobs.py \
   --stage smoke --devices cuda:0 --dry-run
 ```
 
-Inspect the exact 54-job list. First run a one-attempt D0 parity check against
-the retained sampler with the same seed and write the create-only
-`d0-parity.json`. Then launch smoke without `--dry-run`.
+Inspect the exact 54-job list. Run the real legacy-path versus D0 one-attempt
+parity check; it writes the create-only, content-free `d0-parity.json`. Then
+launch smoke without `--dry-run`.
 
 ```bash
+python scripts/run_d0_parity.py \
+  --manifest /workspace/ayb/experiments/dfe-unified-phase0/phase0-df500k-v1/run-manifest.json \
+  --device cuda:0
+
 python scripts/run_phase0_jobs.py \
   --manifest /workspace/ayb/experiments/dfe-unified-phase0/phase0-df500k-v1/run-manifest.json \
   --stage smoke --devices cuda:0
 
 python scripts/summarize_phase0.py \
-  --manifest /workspace/ayb/experiments/dfe-unified-phase0/phase0-df500k-v1/run-manifest.json
+  --manifest /workspace/ayb/experiments/dfe-unified-phase0/phase0-df500k-v1/run-manifest.json \
+  --stage smoke
 
 python scripts/analyze_phase0.py \
   --manifest /workspace/ayb/experiments/dfe-unified-phase0/phase0-df500k-v1/run-manifest.json \
@@ -108,7 +113,8 @@ python scripts/run_phase0_jobs.py \
   --stage main --devices cuda:0,cuda:1,cuda:2,cuda:3
 
 python scripts/summarize_phase0.py \
-  --manifest /workspace/ayb/experiments/dfe-unified-phase0/phase0-df500k-v1/run-manifest.json
+  --manifest /workspace/ayb/experiments/dfe-unified-phase0/phase0-df500k-v1/run-manifest.json \
+  --stage main
 
 python scripts/analyze_phase0.py \
   --manifest /workspace/ayb/experiments/dfe-unified-phase0/phase0-df500k-v1/run-manifest.json \
@@ -134,7 +140,7 @@ online-overhead timing boundary.
 ## Final hash verification
 
 ```bash
-python scripts/summarize_phase0.py --manifest /workspace/ayb/experiments/dfe-unified-phase0/phase0-df500k-v1/run-manifest.json --verify-only
+python scripts/summarize_phase0.py --manifest /workspace/ayb/experiments/dfe-unified-phase0/phase0-df500k-v1/run-manifest.json --stage main --verify-only
 python scripts/analyze_phase0.py --manifest /workspace/ayb/experiments/dfe-unified-phase0/phase0-df500k-v1/run-manifest.json --stage main --verify-only
 sha256sum /workspace/ayb/experiments/dfe-unified-phase0/phase0-df500k-v1/*.json
 git status --short

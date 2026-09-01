@@ -19,6 +19,7 @@ from utils.datasets import get_dataset
 from utils.misc import *
 from utils.data import FOLLOW_BATCH
 from utils.reconstruct import *
+from dfe.diagnostics.sampling import relax_initialization_thresholds
 # from utils.chem import *
 STATUS_RUNNING = 'running'
 STATUS_FINISHED = 'finished'
@@ -89,17 +90,15 @@ def get_init(data, model, transform, threshold):
         )
         data_next_list = [data for data in data_next_list if data.is_high_prob]
         if len(data_next_list) == 0:
-            if torch.all(pdf_pos < threshold.pos_threshold):
-                threshold.pos_threshold = threshold.pos_threshold / 2
-                print('Positional probability threshold is too high. Change to %f' % threshold.pos_threshold)
-            elif torch.all(p_focal < threshold.focal_threshold):
-                threshold.focal_threshold = threshold.focal_threshold / 2
-                print('Focal probability threshold is too high. Change to %f' % threshold.focal_threshold)
-            elif torch.all(element_prob < threshold.element_threshold):
-                threshold.element_threshold = threshold.element_threshold / 2
-                print('Element probability threshold is too high. Change to %f' % threshold.element_threshold)
-            else:
+            changed = relax_initialization_thresholds(
+                threshold,
+                pdf_pos=pdf_pos,
+                p_focal=p_focal,
+                element_prob=element_prob,
+            )
+            if not changed:
                 print('Initialization failed.')
+                break
         else:
             break
 
