@@ -104,14 +104,25 @@ def scan_forbidden_content(
     return violations
 
 
-def verify_manifest(path: pathlib.Path, records: Iterable[dict[str, Any]]) -> None:
+def verify_manifest(
+    path: pathlib.Path,
+    records: Iterable[dict[str, Any]],
+    *,
+    repository_bytes: bool = False,
+) -> None:
     for record in records:
         candidate = ROOT / record["path"]
         if not candidate.is_file():
             raise ValueError(f"{path}: missing {record['path']}")
-        if candidate.stat().st_size != record["size"]:
+        size_key = "repository_size" if repository_bytes and "repository_size" in record else "size"
+        hash_key = (
+            "repository_sha256"
+            if repository_bytes and "repository_sha256" in record
+            else "sha256"
+        )
+        if candidate.stat().st_size != record[size_key]:
             raise ValueError(f"{path}: size mismatch for {record['path']}")
-        if sha256(candidate) != record["sha256"]:
+        if sha256(candidate) != record[hash_key]:
             raise ValueError(f"{path}: SHA-256 mismatch for {record['path']}")
 
 
@@ -122,7 +133,7 @@ def verify_manifests() -> None:
     code = json.loads(code_path.read_text(encoding="utf-8"))
     artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
     results = json.loads(result_path.read_text(encoding="utf-8"))
-    verify_manifest(code_path, code["files"])
+    verify_manifest(code_path, code["files"], repository_bytes=True)
     verify_manifest(
         artifact_path, [artifact["checkpoint"], artifact["training_log"]]
     )

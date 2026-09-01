@@ -28,8 +28,10 @@ class RepositoryEvidenceTests(unittest.TestCase):
         for record in manifest["files"]:
             path = ROOT / record["path"]
             self.assertTrue(path.is_file(), record["path"])
-            self.assertEqual(path.stat().st_size, record["size"])
-            self.assertEqual(sha256(path), record["sha256"])
+            expected_size = record.get("repository_size", record["size"])
+            expected_sha256 = record.get("repository_sha256", record["sha256"])
+            self.assertEqual(path.stat().st_size, expected_size)
+            self.assertEqual(sha256(path), expected_sha256)
 
     def test_checkpoint_manifest_matches_500k_artifact(self):
         manifest_path = ROOT / "artifacts" / "MANIFEST.json"
