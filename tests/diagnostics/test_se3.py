@@ -55,6 +55,12 @@ class SE3PrimitiveTests(unittest.TestCase):
         self.assertEqual(zero.normalized_max, 0.0)
         self.assertEqual(zero.absolute_p95, 0.0)
 
+    def test_multichannel_outputs_use_row_norm_not_elementwise_relative_error(self):
+        expected = np.array([[1.0, 0.0, 0.0, 1.0]])
+        actual = expected + np.array([[0.0, 1e-13, 0.0, 0.0]])
+        stats = normalized_error(actual, expected)
+        self.assertLess(stats.normalized_max, 1e-12)
+
 
 if __name__ == "__main__":
     unittest.main()

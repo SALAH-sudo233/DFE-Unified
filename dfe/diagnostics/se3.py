@@ -86,12 +86,9 @@ def normalized_error(
     if actual.ndim == 0:
         delta = np.abs(actual - expected).reshape(1)
         scale = np.maximum(np.abs(expected), eps).reshape(1)
-    elif actual.shape[-1:] == (3,):
+    else:
         delta = np.linalg.norm(actual - expected, axis=-1).reshape(-1)
         scale = np.maximum(np.linalg.norm(expected, axis=-1), eps).reshape(-1)
-    else:
-        delta = np.abs(actual - expected).reshape(-1)
-        scale = np.maximum(np.abs(expected), eps).reshape(-1)
     if delta.size == 0:
         return ErrorStats(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
     relative = delta / scale

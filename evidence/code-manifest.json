@@ -65,8 +65,8 @@
       "path": "models/maskfill.py",
       "remote_mtime_epoch": 1787305650,
       "remote_path": "/workspace/ayb/Pocket2Mol/models/maskfill.py",
-      "repository_sha256": "bbe6551054f3d029672186150b2f685c830d0fcf6a7f2aa5ad9a459179029d9f",
-      "repository_size": 28349,
+      "repository_sha256": "6a726a61fd2467da9f4f8b356587f4e63d4c519f01812942c091e6e44a62cb7a",
+      "repository_size": 29516,
       "sha256": "928197db8a358875d8c1376e0bfb982ea56bfd39ac3dee130dd590154042a8c8",
       "size": 27500
     },
