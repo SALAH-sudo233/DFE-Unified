@@ -1,0 +1,30 @@
+.history/*
+__pycache__
+outputs/*
+logs/*
+.vscode/*
+sample_for_pocket.py
+tmp/*
+evaluation/.gitignore
+
+# Local development state and credential material
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.egg-info/
+.DS_Store
+Thumbs.db
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+.env
+.env.*
+
+# Curated evidence is explicitly versioned.
+!artifacts/
+!artifacts/**
+!results/
+!results/**
+
