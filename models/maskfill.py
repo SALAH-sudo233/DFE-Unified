@@ -9,6 +9,7 @@ from .embedding import AtomEmbedding
 from .frontier import FrontierLayerVN
 from .position import PositionPredictor
 from .df_module import AnalyticalDirectionField
+from dfe.diagnostics.interventions import compute_df_with_diagnostics
 # from .debug import check_true_bonds_len, check_pred_bonds_len
 from utils.misc import unique
 
@@ -47,6 +48,14 @@ class MaskFillModelVN(Module):
         self.smooth_cross_entropy = SmoothCrossEntropyLoss(reduction='mean', smoothing=0.1)
         self.bceloss_with_logits = nn.BCEWithLogitsLoss()
 
+        object.__setattr__(self, '_diagnostic_intervention', None)
+        object.__setattr__(self, '_diagnostic_observer', None)
+
+    def set_diagnostics(self, intervention=None, observer=None):
+        """Set non-persistent inference diagnostics without changing model state."""
+        object.__setattr__(self, '_diagnostic_intervention', intervention)
+        object.__setattr__(self, '_diagnostic_observer', observer)
+
     def compute_df_features_all(self, compose_pos, compose_feature, idx_protein):
         if not hasattr(self, 'df_dim') or self.df_dim == 0:
             return None
@@ -57,8 +66,17 @@ class MaskFillModelVN(Module):
         else:
             protein_types = torch.zeros(len(protein_pos), dtype=torch.long, device=protein_pos.device)
         protein_mask = torch.ones(len(protein_pos), dtype=torch.bool, device=protein_pos.device)
-        df_emb = self.df_module(compose_pos, protein_pos, protein_types, protein_mask)
-        return self.df_proj(df_emb)
+        inputs = (compose_pos, protein_pos, protein_types, protein_mask)
+        if self._diagnostic_intervention is None and self._diagnostic_observer is None:
+            df_emb = self.df_module(*inputs)
+            return self.df_proj(df_emb)
+        return compute_df_with_diagnostics(
+            self.df_module,
+            self.df_proj,
+            inputs,
+            intervention=self._diagnostic_intervention,
+            observer=self._diagnostic_observer,
+        )
 
     def sample_init(self,
         compose_feature,

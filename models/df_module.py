@@ -55,6 +55,18 @@ class AnalyticalDirectionField(nn.Module):
         pocket_mask: Tensor,    # (P,) bool
     ) -> Tensor:
         """Returns: (Q, hidden_dim) field features at each query point."""
+        return self.project_features(
+            self.raw_features(query_points, pocket_pos, pocket_types, pocket_mask)
+        )
+
+    def raw_features(
+        self,
+        query_points: Tensor,
+        pocket_pos: Tensor,
+        pocket_types: Tensor,
+        pocket_mask: Tensor,
+    ) -> Tensor:
+        """Return the existing eight analytical inputs before scalar projection."""
         diff = pocket_pos.unsqueeze(1) - query_points.unsqueeze(0)  # (P, Q, 3)
         dist = (diff ** 2).sum(dim=-1).add(1e-8).sqrt()  # (P, Q)
 
@@ -79,7 +91,7 @@ class AnalyticalDirectionField(nn.Module):
         dist_sq = min_dist ** 2
         inv_dist = 1.0 / (min_dist + 1.0)
 
-        field_features = torch.cat([
+        return torch.cat([
             min_dist.unsqueeze(-1),
             dir_vec,
             electrostatic.unsqueeze(-1),
@@ -88,4 +100,6 @@ class AnalyticalDirectionField(nn.Module):
             inv_dist.unsqueeze(-1),
         ], dim=-1)  # (Q, 8)
 
-        return self.field_proj(field_features)  # (Q, hidden_dim)
+    def project_features(self, raw_features: Tensor) -> Tensor:
+        """Project raw analytical inputs with the unchanged checkpoint module."""
+        return self.field_proj(raw_features)  # (Q, hidden_dim)

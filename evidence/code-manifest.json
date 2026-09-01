@@ -42,6 +42,8 @@
       "path": "models/df_module.py",
       "remote_mtime_epoch": 1786893732,
       "remote_path": "/workspace/ayb/Pocket2Mol/models/df_module.py",
+      "repository_sha256": "40f18e65cde252a3d70018389800d109df8cf8551925706d32e479ba6d7c55d4",
+      "repository_size": 3767,
       "sha256": "37dfd5daa5ee4fbf271238a4a25779c0db823daac591ea737d9f594713cd3c9d",
       "size": 3247
     },
@@ -63,6 +65,8 @@
       "path": "models/maskfill.py",
       "remote_mtime_epoch": 1787305650,
       "remote_path": "/workspace/ayb/Pocket2Mol/models/maskfill.py",
+      "repository_sha256": "bbe6551054f3d029672186150b2f685c830d0fcf6a7f2aa5ad9a459179029d9f",
+      "repository_size": 28349,
       "sha256": "928197db8a358875d8c1376e0bfb982ea56bfd39ac3dee130dd590154042a8c8",
       "size": 27500
     },
