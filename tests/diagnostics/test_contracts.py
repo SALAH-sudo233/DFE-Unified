@@ -55,6 +55,7 @@ class ContractTests(unittest.TestCase):
         self.assertEqual(config.smoke_attempts, 10)
         self.assertEqual(config.main_attempts, 20)
         self.assertEqual(config.seeds, (20260901, 20260902, 20260903))
+        self.assertEqual(config.sampling_policy.name, "sample_df_500k.yml")
         self.assertEqual(config.openness.direction_count, 2048)
         self.assertEqual(config.openness.cutoff_angstrom, 12.0)
         self.assertEqual(config.interventions, ("D0", "D1", "D2", "D3", "D4", "D5"))

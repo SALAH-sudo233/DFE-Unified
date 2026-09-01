@@ -15,6 +15,7 @@ checkpoint:
   sha256: 34b2e8cadb7351c884e36cbfdee23de2a6ac2cb6fdd213612e401fd36c9d1fc0
   iteration: 500000
   state_tensor_count: 392
+sampling_policy: ../sample_df_500k.yml
 openness:
   direction_count: 2048
   cutoff_angstrom: 12.0

@@ -254,6 +254,9 @@ def build_phase0_manifest(
     config_record = _file_record(
         "config", "configs/diagnostics/phase0_df500k.yaml", config_path
     )
+    sampling_policy_record = _file_record(
+        "sampling_policy", "configs/sample_df_500k.yml", config.sampling_policy
+    )
     centers_record = _file_record("centers", "pocket_centers_30.json", centers_path)
 
     arms = _arm_specs(config.d5_gates)
@@ -283,6 +286,7 @@ def build_phase0_manifest(
         "environment": _environment_versions(),
         "inputs": {
             "config": config_record.to_dict(),
+            "sampling_policy": sampling_policy_record.to_dict(),
             "centers": centers_record.to_dict(),
             "checkpoint": checkpoint.to_dict(),
         },

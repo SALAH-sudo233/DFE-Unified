@@ -120,6 +120,7 @@ class ManifestBuilderTests(unittest.TestCase):
         self.assertFalse(manifest["git"]["is_dirty"])
         self.assertTrue((output / "pockets.jsonl").is_file())
         self.assertTrue((output / "jobs.jsonl").is_file())
+        self.assertIn("sampling_policy", manifest["inputs"])
         self.assertEqual(
             sha256_file(output / "pockets.jsonl"),
             manifest["artifacts"]["pockets"]["sha256"],

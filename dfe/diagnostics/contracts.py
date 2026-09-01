@@ -191,6 +191,7 @@ class Phase0Config:
     smoke_attempts: int
     main_attempts: int
     checkpoint: CheckpointConfig
+    sampling_policy: Path
     openness: OpennessConfig
     interventions: tuple[str, ...]
     d5_gates: tuple[float, ...]
@@ -228,6 +229,7 @@ def load_phase0_config(path: Path) -> Phase0Config:
             "smoke_attempts",
             "main_attempts",
             "checkpoint",
+            "sampling_policy",
             "openness",
             "interventions",
             "d5_gates",
@@ -276,6 +278,7 @@ def load_phase0_config(path: Path) -> Phase0Config:
             iteration=int(checkpoint["iteration"]),
             state_tensor_count=int(checkpoint["state_tensor_count"]),
         ),
+        sampling_policy=(path.parent / str(raw["sampling_policy"])).resolve(),
         openness=OpennessConfig(
             direction_count=int(openness["direction_count"]),
             cutoff_angstrom=float(openness["cutoff_angstrom"]),
@@ -317,4 +320,3 @@ def _validate_phase0_config(config: Phase0Config) -> None:
         raise ValueError("float32 SE(3) tolerance must be 1e-4")
     if config.se3.analytical_float64_tolerance != 1e-8:
         raise ValueError("float64 analytical tolerance must be 1e-8")
-
