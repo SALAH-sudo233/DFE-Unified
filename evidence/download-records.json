@@ -1,0 +1,595 @@
+{
+  "source_host": "aidd",
+  "remote_root": "/workspace/ayb/Pocket2Mol",
+  "retrieved_at": "2026-09-01",
+  "files": [
+    {
+      "path": "models/df_module.py",
+      "remote_path": "/workspace/ayb/Pocket2Mol/models/df_module.py",
+      "size": 3247,
+      "mtime": 1786893732,
+      "sha256": "37dfd5daa5ee4fbf271238a4a25779c0db823daac591ea737d9f594713cd3c9d"
+    },
+    {
+      "path": "models/maskfill.py",
+      "remote_path": "/workspace/ayb/Pocket2Mol/models/maskfill.py",
+      "size": 27500,
+      "mtime": 1787305650,
+      "sha256": "928197db8a358875d8c1376e0bfb982ea56bfd39ac3dee130dd590154042a8c8"
+    },
+    {
+      "path": "models/fields/__init__.py",
+      "remote_path": "/workspace/ayb/Pocket2Mol/models/fields/__init__.py",
+      "size": 695,
+      "mtime": 1787305650,
+      "sha256": "ef68bcec40c684bf2fe973e0f82f6d324435d37d3a8ebcf290d3a73d29b4b4a8"
+    },
+    {
+      "path": "models/fields/classifier.py",
+      "remote_path": "/workspace/ayb/Pocket2Mol/models/fields/classifier.py",
+      "size": 11036,
+      "mtime": 1787305650,
+      "sha256": "86f18ea218e3286040632f624f0d1fa7a1b1261d460b03dd0694c34bf8c68c66"
+    },
+    {
+      "path": "sample.py",
+      "remote_path": "/workspace/ayb/Pocket2Mol/sample.py",
+      "size": 13145,
+      "mtime": 1787303535,
+      "sha256": "84df66a6563ea3493db2dbd2f68be5a9f3e36feb99e1e6022374963271b62cbe"
+    },
+    {
+      "path": "sample_for_pdb.py",
+      "remote_path": "/workspace/ayb/Pocket2Mol/sample_for_pdb.py",
+      "size": 9946,
+      "mtime": 1787303535,
+      "sha256": "afdec1de3a50dade4fb8b7b28fdce4d5ccf813f7bfce196039e8b954891d2c87"
+    },
+    {
+      "path": "utils/datasets/pl.py",
+      "remote_path": "/workspace/ayb/Pocket2Mol/utils/datasets/pl.py",
+      "size": 5463,
+      "mtime": 1786934033,
+      "sha256": "8f7cf37fc4835d98a24bb102a8a0ab8a6de25ad495afd8d0a9c0694f54a580a4"
+    },
+    {
+      "path": "utils/transforms.py",
+      "remote_path": "/workspace/ayb/Pocket2Mol/utils/transforms.py",
+      "size": 41748,
+      "mtime": 1786893910,
+      "sha256": "d9bd8df70c4ce4ae284c743d05d822bdcefa1ac7b657f52f111ce27cf05315b5"
+    },
+    {
+      "path": "configs/train_df.yml",
+      "remote_path": "/workspace/ayb/Pocket2Mol/configs/train_df.yml",
+      "size": 1285,
+      "mtime": 1786934281,
+      "sha256": "30d8b28069a15f3f3c5a74462a0a1f4f45359cffe39021bfcdbb848a3b40a3b7"
+    },
+    {
+      "path": "configs/sample_df_500k.yml",
+      "remote_path": "/workspace/ayb/Pocket2Mol/configs/sample_df_500k.yml",
+      "size": 503,
+      "mtime": 1787909701,
+      "sha256": "083ab6d472553cc8813eb05e242b736237f0f44460199f8822e950b07d33e76b"
+    },
+    {
+      "path": "train_resume.py",
+      "remote_path": "/workspace/ayb/Pocket2Mol/train_resume.py",
+      "size": 11738,
+      "mtime": 1787303072,
+      "sha256": "bb47be35928668fe5bc1cc449d3a707e2bc0fbc0866adb4fa9bbc8de606edbb7"
+    },
+    {
+      "path": "sample_for_pdb_nodisk.py",
+      "remote_path": "/workspace/ayb/Pocket2Mol/sample_for_pdb_nodisk.py",
+      "size": 10498,
+      "mtime": 1787813698,
+      "sha256": "12f9b8ea1cbd20a390f4288b2efae0d33c809dd6fdb83a7f0a44a3e0d8d5a6e4"
+    },
+    {
+      "path": "evaluate_docking_fixed.py",
+      "remote_path": "/workspace/ayb/Pocket2Mol/evaluate_docking_fixed.py",
+      "size": 15534,
+      "mtime": 1787560880,
+      "sha256": "e73e1af5f7204e48268d7fac9b8ae48af0f2ab66635b36cb1b319dc4077e3568"
+    },
+    {
+      "path": "convert_samples_to_sdf.py",
+      "remote_path": "/workspace/ayb/Pocket2Mol/convert_samples_to_sdf.py",
+      "size": 2802,
+      "mtime": 1787198853,
+      "sha256": "4e8d1a51892ab63f42376ef8d7186950e29c9e69aebcb984097a94a6cdfe4072"
+    },
+    {
+      "path": "compute_metrics.py",
+      "remote_path": "/workspace/ayb/Pocket2Mol/compute_metrics.py",
+      "size": 2160,
+      "mtime": 1787888291,
+      "sha256": "ef5353e62adfc1356b023290fc5604b64272c518dbf41497fe97f4765bdfd14f"
+    },
+    {
+      "path": "multi_pocket_eval_df500k_30pocket.sh",
+      "remote_path": "/workspace/ayb/Pocket2Mol/multi_pocket_eval_df500k_30pocket.sh",
+      "size": 5666,
+      "mtime": 1787909701,
+      "sha256": "addcce5ecc168662100a03307102a29411fc48431bb0918a8835cfd28d8ca965"
+    },
+    {
+      "path": "select_30_pockets.py",
+      "remote_path": "/workspace/ayb/Pocket2Mol/select_30_pockets.py",
+      "size": 3705,
+      "mtime": 1787887998,
+      "sha256": "ee14ebe64c6c69adbd9042419e33d90b1b0363ee49652f52394f8053eae6772b"
+    },
+    {
+      "path": "pocket_centers_30.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/pocket_centers_30.json",
+      "size": 2583,
+      "mtime": 1787887999,
+      "sha256": "e25e47d0f31c2a1ea02b8fbdb78596b2dca9872cf767f3a2f2b2e508c5db9ad2"
+    },
+    {
+      "path": "artifacts/checkpoints/df-500k.pt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/logs/checkpoints/500000.pt",
+      "size": 45325467,
+      "mtime": 1787909652,
+      "sha256": "34b2e8cadb7351c884e36cbfdee23de2a6ac2cb6fdd213612e401fd36c9d1fc0"
+    },
+    {
+      "path": "artifacts/logs/train_df_resume_380k.log",
+      "remote_path": "/workspace/ayb/Pocket2Mol/logs/train_df_resume_380k.log",
+      "size": 27578813,
+      "mtime": 1787909651,
+      "sha256": "ffc0badf221028b47564167671880d2d860b6e4ba1825f3dcfa9e095e12b67e5"
+    },
+    {
+      "path": "results/df-500k-21-pocket/summary.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/multi_pocket_eval_df500k_30pocket_results.json",
+      "size": 9507,
+      "mtime": 1787961417,
+      "sha256": "11f409a9c08ca6c58476a0e7cf09cf3ffae7170abcd1262257e56664fc476973"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/10gs/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_10gs/SMILES.txt",
+      "size": 3277,
+      "mtime": 1787910782,
+      "sha256": "1f6d15c4423be97b4aea0c00645a5097b2de6c37fcfc28eac5d138a403a0633c"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/10gs/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_10gs/merged_all.sdf",
+      "size": 172513,
+      "mtime": 1787910782,
+      "sha256": "e7d3878687688495f9edce9ed4c7ce213bc9078cf569811f108a7eab1ecb572d"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/10gs/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_10gs/docking_results.json",
+      "size": 142048,
+      "mtime": 1787911212,
+      "sha256": "08f7bb89f42a74d8eaa59001ad2be264be16cac264f0e5cda6e2d784fa0997e6"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a1e/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a1e/SMILES.txt",
+      "size": 3532,
+      "mtime": 1787911973,
+      "sha256": "ac17ec7484dd4913e565814de86f57f3ad2a5866b18ed80b536c6a47e1098be6"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a1e/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a1e/merged_all.sdf",
+      "size": 182133,
+      "mtime": 1787911973,
+      "sha256": "263c724132e33165856645b84e41bc3b4e27e47657cff4325dedee16d17da119"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a1e/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a1e/docking_results.json",
+      "size": 158625,
+      "mtime": 1787912437,
+      "sha256": "d89c09f0ebecdd86e194840f9e5af520097426817d01cf31fe48f22e306027aa"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a30/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a30/SMILES.txt",
+      "size": 3179,
+      "mtime": 1787913363,
+      "sha256": "514bb4a876b87b510f526e68a36dcb4e15310096ce29a9754989dae660a49ecd"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a30/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a30/merged_all.sdf",
+      "size": 172846,
+      "mtime": 1787913363,
+      "sha256": "2ef0b1f0d569915e63d407e9b9eda7de93e3757d6cf8e890fc8f233ad1ed0d50"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a30/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a30/docking_results.json",
+      "size": 155951,
+      "mtime": 1787913791,
+      "sha256": "96f22e7b1e3e25ddc9db5fe01d89ce8a6fa161bc11ccd29bba6dbbe92c046af3"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a4k/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a4k/SMILES.txt",
+      "size": 2592,
+      "mtime": 1787914521,
+      "sha256": "40ef753ba7dfb96157b54fcb3ade8a5a9d1b798cedb2949f58312a1c34241423"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a4k/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a4k/merged_all.sdf",
+      "size": 136564,
+      "mtime": 1787914520,
+      "sha256": "f3f511661acef839e37812ebf5dfe787fd2c2ceec62482d6572ed0ee48f1eaeb"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a4k/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a4k/docking_results.json",
+      "size": 139859,
+      "mtime": 1787914843,
+      "sha256": "224243e64924b2be645a93210efe84f2025f4d7b1ee5754852747c08a3fe774b"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a94/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a94/SMILES.txt",
+      "size": 3451,
+      "mtime": 1787915918,
+      "sha256": "69de083a56f226dd03e747f1ab5e1468383f4b11c38de4361309ce3b55ee7373"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a94/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a94/merged_all.sdf",
+      "size": 181029,
+      "mtime": 1787915918,
+      "sha256": "362bd77db68c04a1dea3c958c8aa9df6694b8caa4de845465a79b04aab5703dc"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a94/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a94/docking_results.json",
+      "size": 140249,
+      "mtime": 1787916596,
+      "sha256": "5ba34852d434497125bfeaeba820546dc7488a077c0c9b5560f41c14ca6d89dc"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a9q/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a9q/SMILES.txt",
+      "size": 3919,
+      "mtime": 1787917997,
+      "sha256": "21145d8385f9d25d92833754c864c4f343e2e3982dd1a56d38717804dffd57b3"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a9q/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a9q/merged_all.sdf",
+      "size": 197108,
+      "mtime": 1787917997,
+      "sha256": "be4de14c24628c278438cdaf0efac31023be4d72fafc007a95423cab5f81e0e3"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a9q/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a9q/docking_results.json",
+      "size": 161960,
+      "mtime": 1787918517,
+      "sha256": "afde7eeb30a3e7772171b1b8a02e1404290786653c86c85874e2fbd2800a2ba1"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/2yi0/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_2yi0/SMILES.txt",
+      "size": 4230,
+      "mtime": 1787919997,
+      "sha256": "16757c3c42d87c56cacf0951b144e46196aeba502a2f11ff82c1cd43f92aa044"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/2yi0/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_2yi0/merged_all.sdf",
+      "size": 218623,
+      "mtime": 1787919997,
+      "sha256": "ba3a8dea20233a942ad13394108c34e4fbb19537c58e945df2d50f3186ad7b61"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/2yi0/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_2yi0/docking_results.json",
+      "size": 144617,
+      "mtime": 1787920756,
+      "sha256": "564f2111371cc3a504c4f7036d4abc866e3f541a03740486477cc391f1a350d9"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/4afg/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_4afg/SMILES.txt",
+      "size": 3452,
+      "mtime": 1787921576,
+      "sha256": "e2f86f2efba009b54a8339657940509b1689b579314464ad746e0346a7531345"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/4afg/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_4afg/merged_all.sdf",
+      "size": 196137,
+      "mtime": 1787921576,
+      "sha256": "a84a50bf874f55e7a76957514e8849d15343e54182b3775d661633a4c2440d9a"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/4afg/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_4afg/docking_results.json",
+      "size": 174984,
+      "mtime": 1787922062,
+      "sha256": "c9fbe3a37e69ea1634e65b451c7b60eb21db2a8e5282ec98406feb5437f83fe0"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1ezq/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1ezq/SMILES.txt",
+      "size": 2768,
+      "mtime": 1787922860,
+      "sha256": "c12dcf0ad996ba18e05e50f883819d4f7a3d7a47bf48b262d0494e01ff14aa77"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1ezq/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1ezq/merged_all.sdf",
+      "size": 148866,
+      "mtime": 1787922860,
+      "sha256": "0e46109a7e38701e0fc0cb687505f14929ef6102dad08a32638bf332b6ac7fd6"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1ezq/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1ezq/docking_results.json",
+      "size": 141395,
+      "mtime": 1787923197,
+      "sha256": "72d13bd5a98fbc0758b653b9723050f734a9604f63196ac12054733d8544e7f4"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1fm9/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1fm9/SMILES.txt",
+      "size": 2687,
+      "mtime": 1787924110,
+      "sha256": "a0f11b0888fbcb26f790b81cd17720226e7872a225e4ccf805244069a504f090"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1fm9/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1fm9/merged_all.sdf",
+      "size": 152827,
+      "mtime": 1787924110,
+      "sha256": "0cfc136bd7e59be5ded6521d6e119263207d88e4da7e2fcf481a665f8a61ec04"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1fm9/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1fm9/docking_results.json",
+      "size": 145292,
+      "mtime": 1787924531,
+      "sha256": "af31a23448735639b013f504b7f164e6061331aa4520e7b270b950c308c08125"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1g30/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1g30/SMILES.txt",
+      "size": 3770,
+      "mtime": 1787925470,
+      "sha256": "ad9da00989121fafc50bdfcdff0672404a2a7f355c94a9f1a4cc3926c72b8eaa"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1g30/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1g30/merged_all.sdf",
+      "size": 204481,
+      "mtime": 1787925470,
+      "sha256": "1df4b59262a9e4c10d5c3b464c03f8440cc4d62799e5b15bc484da621632e6e0"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1g30/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1g30/docking_results.json",
+      "size": 172373,
+      "mtime": 1787925984,
+      "sha256": "6fceadf637eed72147c975cc5e826dcd68b27c63f1382005ba2bf576712c70a1"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1sgu/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1sgu/SMILES.txt",
+      "size": 4845,
+      "mtime": 1787927874,
+      "sha256": "223430cb63d4b324bbf1b05253170c02d3d628c75cbf44d1fa36c764105e5f5c"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1sgu/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1sgu/merged_all.sdf",
+      "size": 257497,
+      "mtime": 1787927874,
+      "sha256": "0e6695583752a576f440df8dbbec012420399cc378fca7402babcf5bd362461c"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1sgu/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1sgu/docking_results.json",
+      "size": 132516,
+      "mtime": 1787929173,
+      "sha256": "577dc34f3629a917de8cdbd7445e5e23daeb65b47590413ecfb8b1e5dd5f6ba8"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1ui0/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1ui0/SMILES.txt",
+      "size": 3370,
+      "mtime": 1787930022,
+      "sha256": "7cfd6d0c19c3761939b4e50a9f164dd68f6699ecf2aaf053e1c16d9e144e3611"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1ui0/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1ui0/merged_all.sdf",
+      "size": 167754,
+      "mtime": 1787930022,
+      "sha256": "237c81f7d2b0a0c78e1c82e8af9264b6bba51a5c4b780cb5ea64faf3316c34ad"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1ui0/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1ui0/docking_results.json",
+      "size": 160969,
+      "mtime": 1787930542,
+      "sha256": "9ddfaec84cf44de6d24fbd2fc98f2e859895de7102685fe4aea42f7bd83c798a"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1zgi/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1zgi/SMILES.txt",
+      "size": 3584,
+      "mtime": 1787931848,
+      "sha256": "85251b4539f13697101474321e02929aed6125c8937a96ffc771e5915fe9c83e"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1zgi/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1zgi/merged_all.sdf",
+      "size": 194144,
+      "mtime": 1787931848,
+      "sha256": "b29d6eddff559b000080aab881a7cfed29e3a0c60734d21843ed956a1ad8578a"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1zgi/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1zgi/docking_results.json",
+      "size": 136692,
+      "mtime": 1787932463,
+      "sha256": "0f69eaba07f58992f23cf2bf28de686b11ac7057bc66a08157905e27bfdd4208"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3ddg/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3ddg/SMILES.txt",
+      "size": 3718,
+      "mtime": 1787933519,
+      "sha256": "3a5b3ce58ff395f06c476755c4585acdafeeb953f290ee0f1145f571bf2e8d9b"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3ddg/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3ddg/merged_all.sdf",
+      "size": 190381,
+      "mtime": 1787933519,
+      "sha256": "ec0e63ea02ec8e2865f3b527775f15f8d90d7ff54db09f43e104dbb2b59f2be9"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3ddg/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3ddg/docking_results.json",
+      "size": 169156,
+      "mtime": 1787934074,
+      "sha256": "a0c108d6cc9e8b034adcc69dc0b818b5e74555bd177f98f9ccb97782a2f90d5b"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3ebp/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3ebp/SMILES.txt",
+      "size": 3620,
+      "mtime": 1787935037,
+      "sha256": "2c12cf3b28fc1ff9ea03970fbef0881361bd7b45e53bd3242a415fa3d16683ff"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3ebp/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3ebp/merged_all.sdf",
+      "size": 192561,
+      "mtime": 1787935037,
+      "sha256": "5d6e3c85fa2ea98dc33719b0a4ef37453dbb037837cb4229c646f397bc50d2d4"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3ebp/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3ebp/docking_results.json",
+      "size": 155345,
+      "mtime": 1787935475,
+      "sha256": "bc1c0bd654ee093011a66dacecce56295fe341d533d165165e7cc0fb7340526e"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3fv3/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3fv3/SMILES.txt",
+      "size": 4340,
+      "mtime": 1787942398,
+      "sha256": "d231bf43982060312048a1b517c77b64e2ad31147acb45e2c8624fbd042c3b3e"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3fv3/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3fv3/merged_all.sdf",
+      "size": 233637,
+      "mtime": 1787942398,
+      "sha256": "c417208b25a3a1fdd4d62ed9ad6b6c6c5a0cd841000fc811ea655f05cc8ace87"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3fv3/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3fv3/docking_results.json",
+      "size": 162518,
+      "mtime": 1787943273,
+      "sha256": "2a6c1f30c53fdd3d466789133423e39d425a59116d31a9fae68e41b606f082e6"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3i4b/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3i4b/SMILES.txt",
+      "size": 4428,
+      "mtime": 1787947686,
+      "sha256": "1647b414a70a362bdf1013cb46d68ac42dba34500f6e790d0dcc59c943f3e628"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3i4b/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3i4b/merged_all.sdf",
+      "size": 228196,
+      "mtime": 1787947686,
+      "sha256": "ab58eb666407c59eb62f9c198a96664de4bb91f9420a682cad70c727cced4e5d"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3i4b/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3i4b/docking_results.json",
+      "size": 168479,
+      "mtime": 1787948290,
+      "sha256": "0c4a18d206d1640974843e0be2769ff1291afb8fdd24d61df53c7c5f30b50447"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/5jxq/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_5jxq/SMILES.txt",
+      "size": 3968,
+      "mtime": 1787951180,
+      "sha256": "da656d12c68f10405b5e12a994d99cd7b97c6207b1752677a6d41864be852b0b"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/5jxq/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_5jxq/merged_all.sdf",
+      "size": 209627,
+      "mtime": 1787951180,
+      "sha256": "0fa05439478c25e48dc097d85e2b857f94e604a84958f6804f707aadf05086c3"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/5jxq/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_5jxq/docking_results.json",
+      "size": 155192,
+      "mtime": 1787951757,
+      "sha256": "6c86934cd7acefb5df2d07b0d12d43600286a75406244d63efbd2c270dd49ea9"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/5u14/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_5u14/SMILES.txt",
+      "size": 4271,
+      "mtime": 1787956310,
+      "sha256": "82004a49fa0999b03c58ab9b5f9a597dc767d884efd090f839b3967651d24dbf"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/5u14/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_5u14/merged_all.sdf",
+      "size": 211117,
+      "mtime": 1787956310,
+      "sha256": "4e8809546ff6f45fdca24301a0622765dbf8d930fc288105c329cb039e1014ed"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/5u14/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_5u14/docking_results.json",
+      "size": 160046,
+      "mtime": 1787957128,
+      "sha256": "dba227d9d3949541aa5e6477fc81a49cffa3eb5845a4d5d9eb444684f74c2554"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/6fag/SMILES.txt",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_6fag/SMILES.txt",
+      "size": 4581,
+      "mtime": 1787960757,
+      "sha256": "63e2b1d6903450bfe40ed2663d9185dfeb7e1dd35bbe30ba7332e85e4bea08f6"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/6fag/merged_all.sdf",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_6fag/merged_all.sdf",
+      "size": 222923,
+      "mtime": 1787960757,
+      "sha256": "b7444d30dea02925250da9ffe42831bd8ce244b2ebf0faa9b0d8a3afc08d1fdd"
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/6fag/docking_results.json",
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_6fag/docking_results.json",
+      "size": 156233,
+      "mtime": 1787961416,
+      "sha256": "4f8479810cf8fc8a43f8be8def717cca54ba9377fd123cb7fa7b28d76591e2b5"
+    }
+  ]
+}

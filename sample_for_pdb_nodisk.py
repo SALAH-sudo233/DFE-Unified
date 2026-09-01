@@ -152,7 +152,8 @@ if __name__ == '__main__':
 
     print_pool_status(pool, logger)
     logger.info('Saving samples...')
-    torch.save(pool, os.path.join(log_dir, 'samples_init.pt'))
+    # SKIP intermediate save to save disk space
+    # torch.save(pool, os.path.join(log_dir, 'samples_init.pt'))
 
     # # Sampling loop
     logger.info('Start sampling')
@@ -204,7 +205,15 @@ if __name__ == '__main__':
                 if len(nexts) > 0:
                     queue_weight += [1. / len(nexts)] * len(nexts)
             # # random choose mols from candidates
-            prob = logp_to_rank_prob(np.array([p.average_logp[2:] for p in queue_tmp]), queue_weight)  # (logp_focal, logpdf_pos), logp_element, logp_hasatom, logp_bond
+            logp_lists = [list(p.average_logp[2:]) for p in queue_tmp]
+            if len(logp_lists) > 0 and all(len(l) == len(logp_lists[0]) for l in logp_lists):
+                logp_arr = np.array(logp_lists)
+            elif len(logp_lists) > 0:
+                max_len = max(len(l) for l in logp_lists)
+                logp_arr = np.array([l + [0.0] * (max_len - len(l)) for l in logp_lists])
+            else:
+                logp_arr = np.array([])
+            prob = logp_to_rank_prob(logp_arr, queue_weight)  # (logp_focal, logpdf_pos), logp_element, logp_hasatom, logp_bond
             n_tmp = len(queue_tmp)
             # empty queue guard: all candidates finished/failed
             if n_tmp == 0:
@@ -223,7 +232,8 @@ if __name__ == '__main__':
             pool.queue = [queue_tmp[idx] for idx in next_idx]
 
             print_pool_status(pool, logger)
-            torch.save(pool, os.path.join(log_dir, 'samples_%d.pt' % global_step))
+            # SKIP intermediate save
+            # torch.save(pool, os.path.join(log_dir, 'samples_%d.pt' % global_step))
     except KeyboardInterrupt:
         logger.info('Terminated. Generated molecules will be saved.')
 
@@ -237,4 +247,5 @@ if __name__ == '__main__':
             rdmol = data_finished.rdmol
             Chem.MolToMolFile(rdmol, os.path.join(sdf_dir, '%d.sdf' % i))
             
-    torch.save(pool, os.path.join(log_dir, 'samples_all.pt'))
+    # SKIP final save (SDF files are enough)
+    # torch.save(pool, os.path.join(log_dir, 'samples_all.pt'))

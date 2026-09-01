@@ -1,0 +1,133 @@
+{
+  "description": "Allowlisted files retrieved from the remote tree used by the DF 500K run.",
+  "files": [
+    {
+      "path": "compute_metrics.py",
+      "remote_mtime_epoch": 1787888291,
+      "remote_path": "/workspace/ayb/Pocket2Mol/compute_metrics.py",
+      "sha256": "ef5353e62adfc1356b023290fc5604b64272c518dbf41497fe97f4765bdfd14f",
+      "size": 2160
+    },
+    {
+      "path": "configs/sample_df_500k.yml",
+      "remote_mtime_epoch": 1787909701,
+      "remote_path": "/workspace/ayb/Pocket2Mol/configs/sample_df_500k.yml",
+      "sha256": "083ab6d472553cc8813eb05e242b736237f0f44460199f8822e950b07d33e76b",
+      "size": 503
+    },
+    {
+      "path": "configs/train_df.yml",
+      "remote_mtime_epoch": 1786934281,
+      "remote_path": "/workspace/ayb/Pocket2Mol/configs/train_df.yml",
+      "sha256": "30d8b28069a15f3f3c5a74462a0a1f4f45359cffe39021bfcdbb848a3b40a3b7",
+      "size": 1285
+    },
+    {
+      "path": "convert_samples_to_sdf.py",
+      "remote_mtime_epoch": 1787198853,
+      "remote_path": "/workspace/ayb/Pocket2Mol/convert_samples_to_sdf.py",
+      "sha256": "4e8d1a51892ab63f42376ef8d7186950e29c9e69aebcb984097a94a6cdfe4072",
+      "size": 2802
+    },
+    {
+      "path": "evaluate_docking_fixed.py",
+      "remote_mtime_epoch": 1787560880,
+      "remote_path": "/workspace/ayb/Pocket2Mol/evaluate_docking_fixed.py",
+      "sha256": "e73e1af5f7204e48268d7fac9b8ae48af0f2ab66635b36cb1b319dc4077e3568",
+      "size": 15534
+    },
+    {
+      "path": "models/df_module.py",
+      "remote_mtime_epoch": 1786893732,
+      "remote_path": "/workspace/ayb/Pocket2Mol/models/df_module.py",
+      "sha256": "37dfd5daa5ee4fbf271238a4a25779c0db823daac591ea737d9f594713cd3c9d",
+      "size": 3247
+    },
+    {
+      "path": "models/fields/__init__.py",
+      "remote_mtime_epoch": 1787305650,
+      "remote_path": "/workspace/ayb/Pocket2Mol/models/fields/__init__.py",
+      "sha256": "ef68bcec40c684bf2fe973e0f82f6d324435d37d3a8ebcf290d3a73d29b4b4a8",
+      "size": 695
+    },
+    {
+      "path": "models/fields/classifier.py",
+      "remote_mtime_epoch": 1787305650,
+      "remote_path": "/workspace/ayb/Pocket2Mol/models/fields/classifier.py",
+      "sha256": "86f18ea218e3286040632f624f0d1fa7a1b1261d460b03dd0694c34bf8c68c66",
+      "size": 11036
+    },
+    {
+      "path": "models/maskfill.py",
+      "remote_mtime_epoch": 1787305650,
+      "remote_path": "/workspace/ayb/Pocket2Mol/models/maskfill.py",
+      "sha256": "928197db8a358875d8c1376e0bfb982ea56bfd39ac3dee130dd590154042a8c8",
+      "size": 27500
+    },
+    {
+      "path": "multi_pocket_eval_df500k_30pocket.sh",
+      "remote_mtime_epoch": 1787909701,
+      "remote_path": "/workspace/ayb/Pocket2Mol/multi_pocket_eval_df500k_30pocket.sh",
+      "sha256": "addcce5ecc168662100a03307102a29411fc48431bb0918a8835cfd28d8ca965",
+      "size": 5666
+    },
+    {
+      "path": "pocket_centers_30.json",
+      "remote_mtime_epoch": 1787887999,
+      "remote_path": "/workspace/ayb/Pocket2Mol/pocket_centers_30.json",
+      "sha256": "e25e47d0f31c2a1ea02b8fbdb78596b2dca9872cf767f3a2f2b2e508c5db9ad2",
+      "size": 2583
+    },
+    {
+      "path": "sample.py",
+      "remote_mtime_epoch": 1787303535,
+      "remote_path": "/workspace/ayb/Pocket2Mol/sample.py",
+      "sha256": "84df66a6563ea3493db2dbd2f68be5a9f3e36feb99e1e6022374963271b62cbe",
+      "size": 13145
+    },
+    {
+      "path": "sample_for_pdb.py",
+      "remote_mtime_epoch": 1787303535,
+      "remote_path": "/workspace/ayb/Pocket2Mol/sample_for_pdb.py",
+      "sha256": "afdec1de3a50dade4fb8b7b28fdce4d5ccf813f7bfce196039e8b954891d2c87",
+      "size": 9946
+    },
+    {
+      "path": "sample_for_pdb_nodisk.py",
+      "remote_mtime_epoch": 1787813698,
+      "remote_path": "/workspace/ayb/Pocket2Mol/sample_for_pdb_nodisk.py",
+      "sha256": "12f9b8ea1cbd20a390f4288b2efae0d33c809dd6fdb83a7f0a44a3e0d8d5a6e4",
+      "size": 10498
+    },
+    {
+      "path": "select_30_pockets.py",
+      "remote_mtime_epoch": 1787887998,
+      "remote_path": "/workspace/ayb/Pocket2Mol/select_30_pockets.py",
+      "sha256": "ee14ebe64c6c69adbd9042419e33d90b1b0363ee49652f52394f8053eae6772b",
+      "size": 3705
+    },
+    {
+      "path": "train_resume.py",
+      "remote_mtime_epoch": 1787303072,
+      "remote_path": "/workspace/ayb/Pocket2Mol/train_resume.py",
+      "sha256": "bb47be35928668fe5bc1cc449d3a707e2bc0fbc0866adb4fa9bbc8de606edbb7",
+      "size": 11738
+    },
+    {
+      "path": "utils/datasets/pl.py",
+      "remote_mtime_epoch": 1786934033,
+      "remote_path": "/workspace/ayb/Pocket2Mol/utils/datasets/pl.py",
+      "sha256": "8f7cf37fc4835d98a24bb102a8a0ab8a6de25ad495afd8d0a9c0694f54a580a4",
+      "size": 5463
+    },
+    {
+      "path": "utils/transforms.py",
+      "remote_mtime_epoch": 1786893910,
+      "remote_path": "/workspace/ayb/Pocket2Mol/utils/transforms.py",
+      "sha256": "d9bd8df70c4ce4ae284c743d05d822bdcefa1ac7b657f52f111ce27cf05315b5",
+      "size": 41748
+    }
+  ],
+  "source_repository": "https://github.com/PengXingang/Pocket2Mol",
+  "upstream_commit": "836a0c4ce487297ad24bc54ac2ebd163de13242c"
+}

@@ -1,1 +1,2 @@
 *.pt filter=lfs diff=lfs merge=lfs -text
+artifacts/logs/*.log filter=lfs diff=lfs merge=lfs -text

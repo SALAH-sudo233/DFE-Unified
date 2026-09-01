@@ -107,6 +107,32 @@ class PocketLigandPairDataset(Dataset):
             self._connect_db()
         key = self.keys[idx]
         data = pickle.loads(self.db.begin().get(key))
+        if hasattr(data, 'keys') and 'protein' in data.keys() and 'ligand' in data.keys():
+            from ..data import ProteinLigandData
+            pd = dict(data['protein']) if hasattr(data['protein'], 'items') else data['protein']
+            ld = dict(data['ligand']) if hasattr(data['ligand'], 'items') else data['ligand']
+            nd = ProteinLigandData()
+            for k, v in pd.items():
+                nd['protein_' + k] = v
+            for k, v in ld.items():
+                nd['ligand_' + k] = v
+            if 'ligand_bond_index' in nd:
+                import torch as _t
+                bi = nd['ligand_bond_index']
+                if hasattr(bi, 'size') and bi.size(0) > 0:
+                    nbh = {}
+                    for k in range(bi.size(1)):
+                        i, j = bi[0, k].item(), bi[1, k].item()
+                        nbh.setdefault(i, []).append(j)
+                    nd['ligand_nbh_list'] = nbh
+            if 'ligand_bond_type' in nd:
+                import torch as _t
+                bt = nd['ligand_bond_type']
+                bt = _t.where(bt >= 4, _t.tensor(1, dtype=bt.dtype, device=bt.device), bt)
+                nd['ligand_bond_type'] = bt
+            if 'entry' in data:
+                nd['entry'] = data['entry']
+            data = nd
         data.id = idx
         assert data.protein_pos.size(0) > 0
         if self.transform is not None:

@@ -1,0 +1,18 @@
+{
+  "checkpoint": {
+    "iteration": 500000,
+    "path": "artifacts/checkpoints/df-500k.pt",
+    "remote_mtime_epoch": 1787909652,
+    "remote_path": "/workspace/ayb/Pocket2Mol/logs/checkpoints/500000.pt",
+    "sha256": "34b2e8cadb7351c884e36cbfdee23de2a6ac2cb6fdd213612e401fd36c9d1fc0",
+    "size": 45325467,
+    "status": "observed-trained-artifact"
+  },
+  "training_log": {
+    "path": "artifacts/logs/train_df_resume_380k.log",
+    "remote_mtime_epoch": 1787909651,
+    "remote_path": "/workspace/ayb/Pocket2Mol/logs/train_df_resume_380k.log",
+    "sha256": "ffc0badf221028b47564167671880d2d860b6e4ba1825f3dcfa9e095e12b67e5",
+    "size": 27578813
+  }
+}

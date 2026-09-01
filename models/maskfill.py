@@ -8,6 +8,7 @@ from .common import *
 from .embedding import AtomEmbedding
 from .frontier import FrontierLayerVN
 from .position import PositionPredictor
+from .df_module import AnalyticalDirectionField
 # from .debug import check_true_bonds_len, check_pred_bonds_len
 from utils.misc import unique
 
@@ -16,6 +17,7 @@ class MaskFillModelVN(Module):
     def __init__(self, config, num_classes, num_bond_types, protein_atom_feature_dim, ligand_atom_feature_dim):
         super().__init__()
         self.config = config
+        self.ablation = getattr(config, 'ablation', None)
         self.num_bond_types = num_bond_types
         
         self.emb_dim = [config.hidden_channels, config.hidden_channels_vec]
@@ -24,8 +26,17 @@ class MaskFillModelVN(Module):
 
         self.encoder = get_encoder_vn(config.encoder)
         in_sca, in_vec = self.encoder.out_sca, self.encoder.out_vec
+        # DF module (Direction Field)
+        self.df_dim = getattr(config, 'df_dim', 0)
+        if self.df_dim > 0:
+            self.df_module = AnalyticalDirectionField(
+                hidden_dim=self.df_dim,
+                num_protein_types=5,
+            )
+            self.df_proj = nn.Linear(self.df_dim, config.hidden_channels)
         self.field = get_field_vn(config.field, num_classes=num_classes, num_bond_types=num_bond_types, 
-                                             in_sca=in_sca, in_vec=in_vec)
+                                             in_sca=in_sca, in_vec=in_vec,
+                                             ablation=self.ablation)
         self.frontier_pred = FrontierLayerVN(in_sca=in_sca, in_vec=in_vec,
                                                                             hidden_dim_sca=128, hidden_dim_vec=32)
         # self.protein_frontier_pred = FrontierLayerVN(in_sca=in_sca, in_vec=in_vec,
@@ -35,6 +46,19 @@ class MaskFillModelVN(Module):
 
         self.smooth_cross_entropy = SmoothCrossEntropyLoss(reduction='mean', smoothing=0.1)
         self.bceloss_with_logits = nn.BCEWithLogitsLoss()
+
+    def compute_df_features_all(self, compose_pos, compose_feature, idx_protein):
+        if not hasattr(self, 'df_dim') or self.df_dim == 0:
+            return None
+        protein_pos = compose_pos[idx_protein]
+        protein_feature = compose_feature[idx_protein]
+        if protein_feature.size(1) >= 5:
+            protein_types = protein_feature[:, :5].argmax(dim=-1)
+        else:
+            protein_types = torch.zeros(len(protein_pos), dtype=torch.long, device=protein_pos.device)
+        protein_mask = torch.ones(len(protein_pos), dtype=torch.bool, device=protein_pos.device)
+        df_emb = self.df_module(compose_pos, protein_pos, protein_types, protein_mask)
+        return self.df_proj(df_emb)
 
     def sample_init(self,
         compose_feature,
@@ -118,6 +142,10 @@ class MaskFillModelVN(Module):
             edge_index = compose_knn_edge_index,
             edge_feature = compose_knn_edge_feature,
         )
+        # Add DF features to encoder output
+        df_emb = self.compute_df_features_all(compose_pos, compose_feature, idx_protein)
+        if df_emb is not None:
+            h_compose = (h_compose[0] + df_emb, h_compose[1])
         # # For the initial atom
         if len(idx_ligand) == 0:
             idx_ligand = idx_protein
@@ -133,13 +161,20 @@ class MaskFillModelVN(Module):
             # # 2: sample focal from frontiers
             idx_frontier = idx_ligand[ind_frontier]
             p_frontier = torch.sigmoid(y_frontier_pred[ind_frontier])
-            if n_samples > 0:  # sample from frontiers
+            if getattr(self, 'ablation', None) == 'no_frontier':
+                # Random focal selection instead of frontier-based
+                idx_focal_in_compose = idx_ligand[torch.randint(len(idx_ligand), (n_samples if n_samples > 0 else len(idx_ligand),), device=idx_ligand.device)]
+                p_focal = torch.ones(len(idx_focal_in_compose), device=idx_focal_in_compose.device)
+            elif n_samples > 0:  # sample from frontiers
                 p_frontier_in_compose = torch.zeros(len(compose_pos), dtype=torch.float32, device=compose_pos.device)
                 p_frontier_in_compose_sf = torch.zeros_like(p_frontier_in_compose)
                 p_frontier_in_compose_sf[idx_frontier] = F.softmax(p_frontier / frontier_scale, dim=0)
                 p_frontier_in_compose[idx_frontier] = p_frontier
                 idx_focal_in_compose = p_frontier_in_compose_sf.multinomial(num_samples=n_samples, replacement=True)
                 p_focal = p_frontier_in_compose[idx_focal_in_compose]
+            elif getattr(self, 'ablation', None) == 'no_frontier':
+                idx_focal_in_compose = idx_ligand
+                p_focal = torch.ones(len(idx_ligand), device=idx_ligand.device)
             else:  # get all frontiers as focal
                 idx_focal_in_compose = torch.nonzero(ind_frontier)[:, 0]
                 p_focal = p_frontier
@@ -304,7 +339,11 @@ class MaskFillModelVN(Module):
             pos = compose_pos,
             edge_index = compose_knn_edge_index,
             edge_feature = compose_knn_edge_feature,
-        )   # (N_p+N_l, H)    
+        )
+        # Add DF features to encoder output
+        df_emb = self.compute_df_features_all(compose_pos, compose_feature, idx_protein)
+        if df_emb is not None:
+            h_compose = (h_compose[0] + df_emb, h_compose[1])   # (N_p+N_l, H)    
         # # 0: frontier atoms of protein
         y_protein_frontier_pred = self.frontier_pred(
             h_compose,

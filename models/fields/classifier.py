@@ -9,9 +9,10 @@ from ..invariant import GVLinear, GVPerceptronVN, MessageModule
 
 class SpatialClassifierVN(Module):
 
-    def __init__(self, num_classes, num_bond_types, in_sca, in_vec, num_filters, edge_channels, num_heads, k=32, cutoff=10.0):
+    def __init__(self, num_classes, num_bond_types, in_sca, in_vec, num_filters, edge_channels, num_heads, k=32, cutoff=10.0, ablation=None):
         super().__init__()
         self.num_bond_types = num_bond_types
+        self.ablation = ablation
         self.message_module = MessageModule(in_sca, in_vec, edge_channels, edge_channels, num_filters[0], num_filters[1], cutoff)
 
         self.nn_edge_ij = Sequential(
@@ -28,7 +29,7 @@ class SpatialClassifierVN(Module):
             GVPerceptronVN(num_filters[0] * 2 + in_sca, num_filters[1] * 2 + in_vec, num_filters[0], num_filters[1]),
             GVLinear(num_filters[0], num_filters[1], num_filters[0], num_filters[1])
         )
-        self.edge_atten = AttentionEdges(num_filters, num_filters, num_heads, num_bond_types)
+        self.edge_atten = AttentionEdges(num_filters, num_filters, num_heads, num_bond_types, ablation=ablation)
         self.edge_pred = GVLinear(num_filters[0], num_filters[1], num_bond_types + 1, 1)
         
         self.distance_expansion = GaussianSmearing(stop=cutoff, num_gaussians=edge_channels)
@@ -39,7 +40,6 @@ class SpatialClassifierVN(Module):
 
     def forward(self, pos_query, edge_index_query, pos_compose, node_attr_compose, edge_index_q_cps_knn,
                          index_real_cps_edge_for_atten=[], tri_edge_index=[], tri_edge_feat=[]):
-        # (self, pos_query, edge_index_query, pos_ctx, node_attr_ctx, is_mol_atom, batch_query, batch_edge, batch_ctx):
         """
         Args:
             pos_query:   (N_query, 3)
@@ -102,7 +102,7 @@ class SpatialClassifierVN(Module):
 
 class AttentionEdges(Module):
 
-    def __init__(self, hidden_channels, key_channels, num_heads=1, num_bond_types=3):
+    def __init__(self, hidden_channels, key_channels, num_heads=1, num_bond_types=3, ablation=None):
         super().__init__()
         
         assert (hidden_channels[0] % num_heads == 0) and (hidden_channels[1] % num_heads == 0)
@@ -111,6 +111,7 @@ class AttentionEdges(Module):
         self.hidden_channels = hidden_channels
         self.key_channels = key_channels
         self.num_heads = num_heads
+        self.ablation = ablation  # None, 'no_vec_attn', or 'no_tri_bias'
 
         # linear transformation for attention 
         self.q_lin = GVLinear(hidden_channels[0], hidden_channels[1], key_channels[0], key_channels[1])
@@ -144,27 +145,37 @@ class AttentionEdges(Module):
         h_values = (h_values[0].view(N, self.num_heads, -1),  # (N, heads, K_per_head)
                     h_values[1].view(N, self.num_heads, -1, 3))  # (N, heads, K_per_head, 3)
 
-        # assert (index_edge_i_list == index_real_cps_edge_for_atten[0]).all()
-        # assert (index_edge_j_list == index_real_cps_edge_for_atten[1]).all()
         index_edge_i_list, index_edge_j_list = index_real_cps_edge_for_atten
 
-        # # get nodes of triangle edges
-
-        atten_bias = self.atten_bias_lin(
-            tri_edge_index,
-            tri_edge_feat,
-            pos_compose,
-        )
-
+        # Triangle bias
+        if self.ablation == 'no_tri_bias':
+            # A4 ablation: zero out triangle bias
+            atten_bias = (
+                torch.zeros(len(index_edge_i_list), self.num_heads, device=scalar.device),
+                torch.zeros(len(index_edge_i_list), self.num_heads, device=scalar.device)
+            )
+        else:
+            atten_bias = self.atten_bias_lin(
+                tri_edge_index,
+                tri_edge_feat,
+                pos_compose,
+            )
 
         # query * key
         queries_i = [h_queries[0][index_edge_i_list], h_queries[1][index_edge_i_list]]
         keys_j = [h_keys[0][index_edge_j_list], h_keys[1][index_edge_j_list]]
 
-        qk_ij = [
-            (queries_i[0] * keys_j[0]).sum(-1),  # (N', heads)
-            (queries_i[1] * keys_j[1]).sum(-1).sum(-1)  # (N', heads)
-        ]
+        if self.ablation == 'no_vec_attn':
+            # A3 ablation: no vector attention - only use scalar attention
+            qk_ij = [
+                (queries_i[0] * keys_j[0]).sum(-1),  # (N', heads)
+                torch.zeros(len(index_edge_i_list), self.num_heads, device=scalar.device)  # zero vector attention
+            ]
+        else:
+            qk_ij = [
+                (queries_i[0] * keys_j[0]).sum(-1),  # (N', heads)
+                (queries_i[1] * keys_j[1]).sum(-1).sum(-1)  # (N', heads)
+            ]
 
         alpha = [
             atten_bias[0] + qk_ij[0],
@@ -177,10 +188,18 @@ class AttentionEdges(Module):
 
         values_j = [h_values[0][index_edge_j_list], h_values[1][index_edge_j_list]]
         num_attens = len(index_edge_j_list)
-        output =[
-            scatter_sum((alpha[0].unsqueeze(-1) * values_j[0]).view(num_attens, -1), index_edge_i_list, dim=0, dim_size=N),   # (N, H, 3)
-            scatter_sum((alpha[1].unsqueeze(-1).unsqueeze(-1) * values_j[1]).view(num_attens, -1, 3), index_edge_i_list, dim=0, dim_size=N)   # (N, H, 3)
-        ]
+        
+        if self.ablation == 'no_vec_attn':
+            # A3 ablation: no vector attention output - only scalar output
+            output = [
+                scatter_sum((alpha[0].unsqueeze(-1) * values_j[0]).view(num_attens, -1), index_edge_i_list, dim=0, dim_size=N),   # (N, H, 3)
+                torch.zeros_like(vector)  # zero vector output
+            ]
+        else:
+            output = [
+                scatter_sum((alpha[0].unsqueeze(-1) * values_j[0]).view(num_attens, -1), index_edge_i_list, dim=0, dim_size=N),   # (N, H, 3)
+                scatter_sum((alpha[1].unsqueeze(-1).unsqueeze(-1) * values_j[1]).view(num_attens, -1, 3), index_edge_i_list, dim=0, dim_size=N)   # (N, H, 3)
+            ]
 
         # output 
         output = [edge_attr[0] + output[0], edge_attr[1] + output[1]]

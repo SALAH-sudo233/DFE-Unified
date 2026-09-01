@@ -1,0 +1,26 @@
+data:
+  data_name: 'test'
+  dataset:
+    name: pl
+    path: ./data/crossdocked_pocket10
+    split: ./data/split_by_name.pt
+model:
+  checkpoint: ./logs/checkpoints/500000.pt
+  type: df
+  params:
+    hidden_size: 256
+    vec_hidden_size: 64
+    df_dim: 64
+    n_interaction: 6
+sample:
+  seed: 42
+  mask_init: True
+  num_samples: 20
+  beam_size: 100
+  max_steps: 35
+  threshold:
+    focal_threshold: 0.5
+    pos_threshold: 0.25
+    element_threshold: 0.3
+    hasatom_threshold: 0.6
+    bond_threshold: 0.4

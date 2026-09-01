@@ -27,10 +27,19 @@ STATUS_FAILED = 'failed'
 
 def logp_to_rank_prob(logp, weight=1.0):
 
+    # Guard: empty input
+    if len(logp) == 0:
+        return np.array([1.0])
     logp_sum = np.array([np.sum(l) for l in logp])
     prob = np.exp(logp_sum) + 1
     prob = prob * np.array(weight)
-    return prob / prob.sum()
+    # Robust normalization: handle NaN/inf and ensure exact sum to 1
+    prob = np.nan_to_num(prob, nan=1.0, posinf=1e6, neginf=1e-6)
+    prob = np.maximum(prob, 1e-10)
+    prob = prob / prob.sum()
+    if len(prob) > 1:
+        prob[-1] = 1.0 - prob[:-1].sum()
+    return prob
 
 
 @torch.no_grad()  # for a protein-ligand
@@ -212,7 +221,7 @@ if __name__ == '__main__':
 
     # # Model (Main)
     logger.info('Loading main model...')
-    ckpt = torch.load(config.model.checkpoint, map_location=args.device)
+    ckpt = torch.load(config.model.checkpoint, map_location=args.device, weights_only=False)
     model = MaskFillModelVN(
         ckpt['config'].model, 
         num_classes = contrastive_sampler.num_elements,

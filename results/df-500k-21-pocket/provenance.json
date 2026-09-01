@@ -1,0 +1,504 @@
+{
+  "completed_pocket_ids": [
+    "10gs",
+    "1a1e",
+    "1a30",
+    "1a4k",
+    "1a94",
+    "1a9q",
+    "1ezq",
+    "1fm9",
+    "1g30",
+    "1sgu",
+    "1ui0",
+    "1zgi",
+    "2yi0",
+    "3ddg",
+    "3ebp",
+    "3fv3",
+    "3i4b",
+    "4afg",
+    "5jxq",
+    "5u14",
+    "6fag"
+  ],
+  "completed_pockets": 21,
+  "docking_score_below_minus_7": {
+    "rate_over_evaluated_records": 0.5954525954525954,
+    "records": 1388
+  },
+  "evaluated_records": 2331,
+  "files": [
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/10gs/SMILES.txt",
+      "remote_mtime_epoch": 1787910782,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_10gs/SMILES.txt",
+      "sha256": "1f6d15c4423be97b4aea0c00645a5097b2de6c37fcfc28eac5d138a403a0633c",
+      "size": 3277
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/10gs/docking_results.json",
+      "remote_mtime_epoch": 1787911212,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_10gs/docking_results.json",
+      "sha256": "08f7bb89f42a74d8eaa59001ad2be264be16cac264f0e5cda6e2d784fa0997e6",
+      "size": 142048
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/10gs/merged_all.sdf",
+      "remote_mtime_epoch": 1787910782,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_10gs/merged_all.sdf",
+      "sha256": "e7d3878687688495f9edce9ed4c7ce213bc9078cf569811f108a7eab1ecb572d",
+      "size": 172513
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a1e/SMILES.txt",
+      "remote_mtime_epoch": 1787911973,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a1e/SMILES.txt",
+      "sha256": "ac17ec7484dd4913e565814de86f57f3ad2a5866b18ed80b536c6a47e1098be6",
+      "size": 3532
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a1e/docking_results.json",
+      "remote_mtime_epoch": 1787912437,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a1e/docking_results.json",
+      "sha256": "d89c09f0ebecdd86e194840f9e5af520097426817d01cf31fe48f22e306027aa",
+      "size": 158625
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a1e/merged_all.sdf",
+      "remote_mtime_epoch": 1787911973,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a1e/merged_all.sdf",
+      "sha256": "263c724132e33165856645b84e41bc3b4e27e47657cff4325dedee16d17da119",
+      "size": 182133
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a30/SMILES.txt",
+      "remote_mtime_epoch": 1787913363,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a30/SMILES.txt",
+      "sha256": "514bb4a876b87b510f526e68a36dcb4e15310096ce29a9754989dae660a49ecd",
+      "size": 3179
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a30/docking_results.json",
+      "remote_mtime_epoch": 1787913791,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a30/docking_results.json",
+      "sha256": "96f22e7b1e3e25ddc9db5fe01d89ce8a6fa161bc11ccd29bba6dbbe92c046af3",
+      "size": 155951
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a30/merged_all.sdf",
+      "remote_mtime_epoch": 1787913363,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a30/merged_all.sdf",
+      "sha256": "2ef0b1f0d569915e63d407e9b9eda7de93e3757d6cf8e890fc8f233ad1ed0d50",
+      "size": 172846
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a4k/SMILES.txt",
+      "remote_mtime_epoch": 1787914521,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a4k/SMILES.txt",
+      "sha256": "40ef753ba7dfb96157b54fcb3ade8a5a9d1b798cedb2949f58312a1c34241423",
+      "size": 2592
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a4k/docking_results.json",
+      "remote_mtime_epoch": 1787914843,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a4k/docking_results.json",
+      "sha256": "224243e64924b2be645a93210efe84f2025f4d7b1ee5754852747c08a3fe774b",
+      "size": 139859
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a4k/merged_all.sdf",
+      "remote_mtime_epoch": 1787914520,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a4k/merged_all.sdf",
+      "sha256": "f3f511661acef839e37812ebf5dfe787fd2c2ceec62482d6572ed0ee48f1eaeb",
+      "size": 136564
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a94/SMILES.txt",
+      "remote_mtime_epoch": 1787915918,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a94/SMILES.txt",
+      "sha256": "69de083a56f226dd03e747f1ab5e1468383f4b11c38de4361309ce3b55ee7373",
+      "size": 3451
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a94/docking_results.json",
+      "remote_mtime_epoch": 1787916596,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a94/docking_results.json",
+      "sha256": "5ba34852d434497125bfeaeba820546dc7488a077c0c9b5560f41c14ca6d89dc",
+      "size": 140249
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a94/merged_all.sdf",
+      "remote_mtime_epoch": 1787915918,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a94/merged_all.sdf",
+      "sha256": "362bd77db68c04a1dea3c958c8aa9df6694b8caa4de845465a79b04aab5703dc",
+      "size": 181029
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a9q/SMILES.txt",
+      "remote_mtime_epoch": 1787917997,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a9q/SMILES.txt",
+      "sha256": "21145d8385f9d25d92833754c864c4f343e2e3982dd1a56d38717804dffd57b3",
+      "size": 3919
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a9q/docking_results.json",
+      "remote_mtime_epoch": 1787918517,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a9q/docking_results.json",
+      "sha256": "afde7eeb30a3e7772171b1b8a02e1404290786653c86c85874e2fbd2800a2ba1",
+      "size": 161960
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1a9q/merged_all.sdf",
+      "remote_mtime_epoch": 1787917997,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1a9q/merged_all.sdf",
+      "sha256": "be4de14c24628c278438cdaf0efac31023be4d72fafc007a95423cab5f81e0e3",
+      "size": 197108
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1ezq/SMILES.txt",
+      "remote_mtime_epoch": 1787922860,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1ezq/SMILES.txt",
+      "sha256": "c12dcf0ad996ba18e05e50f883819d4f7a3d7a47bf48b262d0494e01ff14aa77",
+      "size": 2768
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1ezq/docking_results.json",
+      "remote_mtime_epoch": 1787923197,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1ezq/docking_results.json",
+      "sha256": "72d13bd5a98fbc0758b653b9723050f734a9604f63196ac12054733d8544e7f4",
+      "size": 141395
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1ezq/merged_all.sdf",
+      "remote_mtime_epoch": 1787922860,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1ezq/merged_all.sdf",
+      "sha256": "0e46109a7e38701e0fc0cb687505f14929ef6102dad08a32638bf332b6ac7fd6",
+      "size": 148866
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1fm9/SMILES.txt",
+      "remote_mtime_epoch": 1787924110,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1fm9/SMILES.txt",
+      "sha256": "a0f11b0888fbcb26f790b81cd17720226e7872a225e4ccf805244069a504f090",
+      "size": 2687
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1fm9/docking_results.json",
+      "remote_mtime_epoch": 1787924531,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1fm9/docking_results.json",
+      "sha256": "af31a23448735639b013f504b7f164e6061331aa4520e7b270b950c308c08125",
+      "size": 145292
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1fm9/merged_all.sdf",
+      "remote_mtime_epoch": 1787924110,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1fm9/merged_all.sdf",
+      "sha256": "0cfc136bd7e59be5ded6521d6e119263207d88e4da7e2fcf481a665f8a61ec04",
+      "size": 152827
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1g30/SMILES.txt",
+      "remote_mtime_epoch": 1787925470,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1g30/SMILES.txt",
+      "sha256": "ad9da00989121fafc50bdfcdff0672404a2a7f355c94a9f1a4cc3926c72b8eaa",
+      "size": 3770
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1g30/docking_results.json",
+      "remote_mtime_epoch": 1787925984,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1g30/docking_results.json",
+      "sha256": "6fceadf637eed72147c975cc5e826dcd68b27c63f1382005ba2bf576712c70a1",
+      "size": 172373
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1g30/merged_all.sdf",
+      "remote_mtime_epoch": 1787925470,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1g30/merged_all.sdf",
+      "sha256": "1df4b59262a9e4c10d5c3b464c03f8440cc4d62799e5b15bc484da621632e6e0",
+      "size": 204481
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1sgu/SMILES.txt",
+      "remote_mtime_epoch": 1787927874,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1sgu/SMILES.txt",
+      "sha256": "223430cb63d4b324bbf1b05253170c02d3d628c75cbf44d1fa36c764105e5f5c",
+      "size": 4845
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1sgu/docking_results.json",
+      "remote_mtime_epoch": 1787929173,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1sgu/docking_results.json",
+      "sha256": "577dc34f3629a917de8cdbd7445e5e23daeb65b47590413ecfb8b1e5dd5f6ba8",
+      "size": 132516
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1sgu/merged_all.sdf",
+      "remote_mtime_epoch": 1787927874,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1sgu/merged_all.sdf",
+      "sha256": "0e6695583752a576f440df8dbbec012420399cc378fca7402babcf5bd362461c",
+      "size": 257497
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1ui0/SMILES.txt",
+      "remote_mtime_epoch": 1787930022,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1ui0/SMILES.txt",
+      "sha256": "7cfd6d0c19c3761939b4e50a9f164dd68f6699ecf2aaf053e1c16d9e144e3611",
+      "size": 3370
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1ui0/docking_results.json",
+      "remote_mtime_epoch": 1787930542,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1ui0/docking_results.json",
+      "sha256": "9ddfaec84cf44de6d24fbd2fc98f2e859895de7102685fe4aea42f7bd83c798a",
+      "size": 160969
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1ui0/merged_all.sdf",
+      "remote_mtime_epoch": 1787930022,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1ui0/merged_all.sdf",
+      "sha256": "237c81f7d2b0a0c78e1c82e8af9264b6bba51a5c4b780cb5ea64faf3316c34ad",
+      "size": 167754
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1zgi/SMILES.txt",
+      "remote_mtime_epoch": 1787931848,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1zgi/SMILES.txt",
+      "sha256": "85251b4539f13697101474321e02929aed6125c8937a96ffc771e5915fe9c83e",
+      "size": 3584
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1zgi/docking_results.json",
+      "remote_mtime_epoch": 1787932463,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1zgi/docking_results.json",
+      "sha256": "0f69eaba07f58992f23cf2bf28de686b11ac7057bc66a08157905e27bfdd4208",
+      "size": 136692
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/1zgi/merged_all.sdf",
+      "remote_mtime_epoch": 1787931848,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_1zgi/merged_all.sdf",
+      "sha256": "b29d6eddff559b000080aab881a7cfed29e3a0c60734d21843ed956a1ad8578a",
+      "size": 194144
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/2yi0/SMILES.txt",
+      "remote_mtime_epoch": 1787919997,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_2yi0/SMILES.txt",
+      "sha256": "16757c3c42d87c56cacf0951b144e46196aeba502a2f11ff82c1cd43f92aa044",
+      "size": 4230
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/2yi0/docking_results.json",
+      "remote_mtime_epoch": 1787920756,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_2yi0/docking_results.json",
+      "sha256": "564f2111371cc3a504c4f7036d4abc866e3f541a03740486477cc391f1a350d9",
+      "size": 144617
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/2yi0/merged_all.sdf",
+      "remote_mtime_epoch": 1787919997,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_2yi0/merged_all.sdf",
+      "sha256": "ba3a8dea20233a942ad13394108c34e4fbb19537c58e945df2d50f3186ad7b61",
+      "size": 218623
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3ddg/SMILES.txt",
+      "remote_mtime_epoch": 1787933519,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3ddg/SMILES.txt",
+      "sha256": "3a5b3ce58ff395f06c476755c4585acdafeeb953f290ee0f1145f571bf2e8d9b",
+      "size": 3718
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3ddg/docking_results.json",
+      "remote_mtime_epoch": 1787934074,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3ddg/docking_results.json",
+      "sha256": "a0c108d6cc9e8b034adcc69dc0b818b5e74555bd177f98f9ccb97782a2f90d5b",
+      "size": 169156
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3ddg/merged_all.sdf",
+      "remote_mtime_epoch": 1787933519,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3ddg/merged_all.sdf",
+      "sha256": "ec0e63ea02ec8e2865f3b527775f15f8d90d7ff54db09f43e104dbb2b59f2be9",
+      "size": 190381
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3ebp/SMILES.txt",
+      "remote_mtime_epoch": 1787935037,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3ebp/SMILES.txt",
+      "sha256": "2c12cf3b28fc1ff9ea03970fbef0881361bd7b45e53bd3242a415fa3d16683ff",
+      "size": 3620
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3ebp/docking_results.json",
+      "remote_mtime_epoch": 1787935475,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3ebp/docking_results.json",
+      "sha256": "bc1c0bd654ee093011a66dacecce56295fe341d533d165165e7cc0fb7340526e",
+      "size": 155345
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3ebp/merged_all.sdf",
+      "remote_mtime_epoch": 1787935037,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3ebp/merged_all.sdf",
+      "sha256": "5d6e3c85fa2ea98dc33719b0a4ef37453dbb037837cb4229c646f397bc50d2d4",
+      "size": 192561
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3fv3/SMILES.txt",
+      "remote_mtime_epoch": 1787942398,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3fv3/SMILES.txt",
+      "sha256": "d231bf43982060312048a1b517c77b64e2ad31147acb45e2c8624fbd042c3b3e",
+      "size": 4340
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3fv3/docking_results.json",
+      "remote_mtime_epoch": 1787943273,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3fv3/docking_results.json",
+      "sha256": "2a6c1f30c53fdd3d466789133423e39d425a59116d31a9fae68e41b606f082e6",
+      "size": 162518
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3fv3/merged_all.sdf",
+      "remote_mtime_epoch": 1787942398,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3fv3/merged_all.sdf",
+      "sha256": "c417208b25a3a1fdd4d62ed9ad6b6c6c5a0cd841000fc811ea655f05cc8ace87",
+      "size": 233637
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3i4b/SMILES.txt",
+      "remote_mtime_epoch": 1787947686,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3i4b/SMILES.txt",
+      "sha256": "1647b414a70a362bdf1013cb46d68ac42dba34500f6e790d0dcc59c943f3e628",
+      "size": 4428
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3i4b/docking_results.json",
+      "remote_mtime_epoch": 1787948290,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3i4b/docking_results.json",
+      "sha256": "0c4a18d206d1640974843e0be2769ff1291afb8fdd24d61df53c7c5f30b50447",
+      "size": 168479
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/3i4b/merged_all.sdf",
+      "remote_mtime_epoch": 1787947686,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_3i4b/merged_all.sdf",
+      "sha256": "ab58eb666407c59eb62f9c198a96664de4bb91f9420a682cad70c727cced4e5d",
+      "size": 228196
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/4afg/SMILES.txt",
+      "remote_mtime_epoch": 1787921576,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_4afg/SMILES.txt",
+      "sha256": "e2f86f2efba009b54a8339657940509b1689b579314464ad746e0346a7531345",
+      "size": 3452
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/4afg/docking_results.json",
+      "remote_mtime_epoch": 1787922062,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_4afg/docking_results.json",
+      "sha256": "c9fbe3a37e69ea1634e65b451c7b60eb21db2a8e5282ec98406feb5437f83fe0",
+      "size": 174984
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/4afg/merged_all.sdf",
+      "remote_mtime_epoch": 1787921576,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_4afg/merged_all.sdf",
+      "sha256": "a84a50bf874f55e7a76957514e8849d15343e54182b3775d661633a4c2440d9a",
+      "size": 196137
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/5jxq/SMILES.txt",
+      "remote_mtime_epoch": 1787951180,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_5jxq/SMILES.txt",
+      "sha256": "da656d12c68f10405b5e12a994d99cd7b97c6207b1752677a6d41864be852b0b",
+      "size": 3968
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/5jxq/docking_results.json",
+      "remote_mtime_epoch": 1787951757,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_5jxq/docking_results.json",
+      "sha256": "6c86934cd7acefb5df2d07b0d12d43600286a75406244d63efbd2c270dd49ea9",
+      "size": 155192
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/5jxq/merged_all.sdf",
+      "remote_mtime_epoch": 1787951180,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_5jxq/merged_all.sdf",
+      "sha256": "0fa05439478c25e48dc097d85e2b857f94e604a84958f6804f707aadf05086c3",
+      "size": 209627
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/5u14/SMILES.txt",
+      "remote_mtime_epoch": 1787956310,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_5u14/SMILES.txt",
+      "sha256": "82004a49fa0999b03c58ab9b5f9a597dc767d884efd090f839b3967651d24dbf",
+      "size": 4271
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/5u14/docking_results.json",
+      "remote_mtime_epoch": 1787957128,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_5u14/docking_results.json",
+      "sha256": "dba227d9d3949541aa5e6477fc81a49cffa3eb5845a4d5d9eb444684f74c2554",
+      "size": 160046
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/5u14/merged_all.sdf",
+      "remote_mtime_epoch": 1787956310,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_5u14/merged_all.sdf",
+      "sha256": "4e8809546ff6f45fdca24301a0622765dbf8d930fc288105c329cb039e1014ed",
+      "size": 211117
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/6fag/SMILES.txt",
+      "remote_mtime_epoch": 1787960757,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_6fag/SMILES.txt",
+      "sha256": "63e2b1d6903450bfe40ed2663d9185dfeb7e1dd35bbe30ba7332e85e4bea08f6",
+      "size": 4581
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/6fag/docking_results.json",
+      "remote_mtime_epoch": 1787961416,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_6fag/docking_results.json",
+      "sha256": "4f8479810cf8fc8a43f8be8def717cca54ba9377fd123cb7fa7b28d76591e2b5",
+      "size": 156233
+    },
+    {
+      "path": "results/df-500k-21-pocket/per-pocket/6fag/merged_all.sdf",
+      "remote_mtime_epoch": 1787960757,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/eval_df500k_30pocket_6fag/merged_all.sdf",
+      "sha256": "b7444d30dea02925250da9ffe42831bd8ce244b2ebf0faa9b0d8a3afc08d1fdd",
+      "size": 222923
+    },
+    {
+      "path": "results/df-500k-21-pocket/summary.json",
+      "remote_mtime_epoch": 1787961417,
+      "remote_path": "/workspace/ayb/Pocket2Mol/outputs/multi_pocket_eval_df500k_30pocket_results.json",
+      "sha256": "11f409a9c08ca6c58476a0e7cf09cf3ffae7170abcd1262257e56664fc476973",
+      "size": 9507
+    }
+  ],
+  "macro_metrics": {
+    "docking_score_mean": -7.303545337373015,
+    "molecular_weight_mean": 280.6138506259532,
+    "qed_mean": 0.578655261201977
+  },
+  "missing_pocket_ids": [
+    "1f73",
+    "1wur",
+    "2iko",
+    "3ove",
+    "4kzu",
+    "4qxo",
+    "4zl4",
+    "6guc",
+    "6qr1"
+  ],
+  "posebusters": {
+    "pass_rate_over_evaluated_records": 0.42299442299442297,
+    "passed": 986
+  },
+  "requested_pockets": 30,
+  "status": "partial",
+  "validity_denominator_warning": "The retained evaluator loaded already reconstructed SDF molecules. Reconstruction failures and molecules that could not be written/read as SDF are not represented in this denominator, so the reported success_rate is not end-to-end generation validity."
+}
