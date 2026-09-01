@@ -1,0 +1,28 @@
+schema_version: phase0.v1
+experiment_ids:
+  manifest: P0-MANIFEST-v1
+  openness: P0-OPENNESS-v1
+  se3: P0-SE3-v1
+  smoke: P0-INT-SMOKE-v1
+  main: P0-INT-MAIN-v1
+  trace: P0-TRACE-v1
+  statistics: P0-STATS-v1
+seeds: [20260901, 20260902, 20260903]
+smoke_attempts: 10
+main_attempts: 20
+checkpoint:
+  path: ../../artifacts/checkpoints/df-500k.pt
+  sha256: 34b2e8cadb7351c884e36cbfdee23de2a6ac2cb6fdd213612e401fd36c9d1fc0
+  iteration: 500000
+  state_tensor_count: 392
+openness:
+  direction_count: 2048
+  cutoff_angstrom: 12.0
+  radius_table_version: bondi-1964-v1
+interventions: [D0, D1, D2, D3, D4, D5]
+d5_gates: [0.25, 0.5, 1.0, 1.5]
+se3:
+  rotations: 100
+  translations: 10
+  model_float32_tolerance: 1.0e-4
+  analytical_float64_tolerance: 1.0e-8
