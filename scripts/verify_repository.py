@@ -13,8 +13,13 @@ import types
 from collections.abc import Iterable
 from typing import Any
 
-
 ROOT = pathlib.Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from dfe.diagnostics.contracts import load_phase0_config  # noqa: E402
+
+
 EXPECTED_CHECKPOINT_SHA256 = (
     "34b2e8cadb7351c884e36cbfdee23de2a6ac2cb6fdd213612e401fd36c9d1fc0"
 )
@@ -172,6 +177,52 @@ def verify_results() -> None:
         raise ValueError(f"unexpected partial-run scope: {observed}")
 
 
+def verify_phase0_sources() -> str:
+    config_path = ROOT / "configs" / "diagnostics" / "phase0_df500k.yaml"
+    config = load_phase0_config(config_path)
+    required = (
+        ROOT / "docs" / "superpowers" / "specs" / "2026-09-01-generation-first-unified-experiment-design.md",
+        ROOT / "docs" / "superpowers" / "plans" / "2026-09-01-phase0-df500k-diagnostics.md",
+        ROOT / "docs" / "experiments" / "phase0-operator-runbook.md",
+    )
+    missing = [path.relative_to(ROOT).as_posix() for path in required if not path.is_file()]
+    if missing:
+        raise ValueError(f"missing Phase 0 authorities: {missing}")
+    for candidate in ("runs/example", "diagnostic-runs/example", "example.jsonl.tmp"):
+        ignored = subprocess.run(
+            ["git", "check-ignore", "-q", candidate], cwd=ROOT
+        ).returncode == 0
+        if not ignored:
+            raise ValueError(f"diagnostic output is not ignored: {candidate}")
+    return f"schema={config.schema_version}, seeds={len(config.seeds)}"
+
+
+def verify_no_tracked_run_artifacts(paths: Iterable[pathlib.Path]) -> None:
+    run_names = {
+        "run-manifest.json",
+        "pockets.jsonl",
+        "jobs.jsonl",
+        "attempts.jsonl",
+        "events.jsonl",
+        "openness.jsonl",
+        "se3-audit.json",
+        "gate-smoke.json",
+        "gate-phase0.json",
+    }
+    violations = []
+    for path in paths:
+        if path.name not in run_names and not {"runs", "diagnostic-runs"}.intersection(path.parts):
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, OSError):
+            continue
+        if "/workspace/ayb" in text:
+            violations.append(relative_posix(ROOT, path))
+    if violations:
+        raise ValueError(f"tracked run artifacts expose absolute AIDD paths: {violations}")
+
+
 def install_easydict_pickle_shim() -> None:
     module = types.ModuleType("easydict")
 
@@ -251,6 +302,7 @@ def main() -> int:
         ("JSON documents", verify_json),
         ("source/artifact/result manifests", verify_manifests),
         ("partial evaluation scope", verify_results),
+        ("Phase 0 sources", verify_phase0_sources),
         ("checkpoint structure", verify_checkpoint),
     ]
     try:
@@ -262,6 +314,7 @@ def main() -> int:
         content_violations = scan_forbidden_content(ROOT, files)
         if name_violations or content_violations:
             raise ValueError("; ".join(name_violations + content_violations))
+        verify_no_tracked_run_artifacts(files)
         print(f"PASS tracked-file security scan ({len(files)} files)")
 
         for label, check in checks:
