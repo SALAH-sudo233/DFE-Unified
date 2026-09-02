@@ -20,7 +20,8 @@ class MessageModule(Module):
         self.sca_linear = Linear(hid_sca, out_sca)  # edge_sca for y_sca
         self.e2n_linear = Linear(hid_sca, out_vec)
         self.n2e_linear = Linear(out_sca, out_vec)
-        self.edge_vnlinear = VNLinear(hid_vec, out_vec)
+        # A coordinate-wise bias is not a valid SO(3)-equivariant vector map.
+        self.edge_vnlinear = VNLinear(hid_vec, out_vec, bias=False)
 
         self.out_gvlienar = GVLinear(out_sca, out_vec, out_sca, out_vec)
 
