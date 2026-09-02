@@ -198,16 +198,31 @@ def verify_phase0_sources() -> str:
 
 
 def verify_science_sources() -> str:
-    plan = ROOT / "docs" / "superpowers" / "plans" / "2026-09-02-sci1-se3-and-sci2a.md"
-    if not plan.is_file():
-        raise ValueError("missing SCI-1/SCI-2A implementation plan")
+    required_paths = (
+        "docs/superpowers/plans/2026-09-02-sci1-se3-and-sci2a.md",
+        "dfe/science/vector_origin.py",
+        "tests/science/test_vector_origin.py",
+        "tests/science/test_vector_origin_model_hook.py",
+        "docs/superpowers/specs/2026-09-02-se3-vector-origin-candidates-design.md",
+        "docs/superpowers/plans/2026-09-02-se3-vector-origin-candidates.md",
+    )
+    missing = [path for path in required_paths if not (ROOT / path).is_file()]
+    if missing:
+        raise ValueError(f"missing science authorities or tests: {missing}")
     from dfe.science import SCIENCE_EXPERIMENT_IDS
     from dfe.science.feature_interventions import INTERVENTIONS
+    from dfe.science.vector_origin import VECTOR_ORIGIN_MODES
     if SCIENCE_EXPERIMENT_IDS != ("SCI-1-SE3-v1", "SCI-2A-FEATURE-v1"):
         raise ValueError("unexpected science experiment IDs")
     if len(INTERVENTIONS) != 8:
         raise ValueError("SCI-2A intervention matrix must contain eight frozen arms")
-    return f"science_ids={len(SCIENCE_EXPERIMENT_IDS)}, feature_arms={len(INTERVENTIONS)}"
+    if VECTOR_ORIGIN_MODES != ("absolute", "centered", "zero"):
+        raise ValueError("SCI-1 vector-origin matrix must contain three frozen arms")
+    return (
+        f"science_ids={len(SCIENCE_EXPERIMENT_IDS)}, "
+        f"feature_arms={len(INTERVENTIONS)}, "
+        f"vector_origin_arms={len(VECTOR_ORIGIN_MODES)}"
+    )
 
 
 def verify_no_tracked_run_artifacts(paths: Iterable[pathlib.Path]) -> None:

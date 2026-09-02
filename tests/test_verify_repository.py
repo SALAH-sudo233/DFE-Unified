@@ -31,5 +31,25 @@ class RepositorySecurityScanTests(unittest.TestCase):
             self.assertEqual(violations, ["forbidden filename: ssh_upload_results.py"])
 
 
+class ScienceSourceVerificationTests(unittest.TestCase):
+    def test_vector_origin_authorities_and_tests_are_required(self):
+        source = (
+            pathlib.Path(__file__).parents[1]
+            / "scripts"
+            / "verify_repository.py"
+        ).read_text(encoding="utf-8")
+        required = (
+            "dfe/science/vector_origin.py",
+            "tests/science/test_vector_origin.py",
+            "tests/science/test_vector_origin_model_hook.py",
+            "docs/superpowers/specs/2026-09-02-se3-vector-origin-candidates-design.md",
+            "docs/superpowers/plans/2026-09-02-se3-vector-origin-candidates.md",
+        )
+
+        for path in required:
+            with self.subTest(path=path):
+                self.assertIn(path, source)
+
+
 if __name__ == "__main__":
     unittest.main()

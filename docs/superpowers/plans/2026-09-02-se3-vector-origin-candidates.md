@@ -400,7 +400,7 @@ git commit -m "feat: gate vector-origin se3 preflight"
 - Consumes the new helper, tests, design, and plan paths.
 - Produces no runtime API; extends repository evidence validation only.
 
-- [ ] **Step 1: Add required-file expectations to the verifier test**
+- [x] **Step 1: Add required-file expectations to the verifier test**
 
 Extend the existing required-path fixture/assertion to include:
 
@@ -412,24 +412,24 @@ Path("docs/superpowers/specs/2026-09-02-se3-vector-origin-candidates-design.md")
 Path("docs/superpowers/plans/2026-09-02-se3-vector-origin-candidates.md")
 ```
 
-- [ ] **Step 2: Run the verifier test and verify RED**
+- [x] **Step 2: Run the verifier test and verify RED**
 
 Run: `python -m unittest tests.test_verify_repository -v`
 
 Expected: the new assertion fails until `verify_repository.py` contains the
 same required paths.
 
-- [ ] **Step 3: Add the paths to repository verification**
+- [x] **Step 3: Add the paths to repository verification**
 
 Append the five paths to the existing science required-file collection. Do not
 change checkpoint-size/hash logic, Phase 0 contracts, or absolute-path checks.
 
-- [ ] **Step 4: Run the complete local V0 gate**
+- [x] **Step 4: Run the complete local V0 gate**
 
 Run:
 
 ```bash
-python -m unittest tests.science -v
+python -m unittest discover -s tests/science -t . -v
 python -m unittest discover -s tests -v
 python -m py_compile dfe/science/vector_origin.py scripts/run_sci1_se3_audit.py models/maskfill.py
 python scripts/verify_repository.py
@@ -439,7 +439,7 @@ git diff --check
 Expected: all tests PASS, compilation exits `0`, repository verification prints
 `Repository verification passed.`, and `git diff --check` emits no output.
 
-- [ ] **Step 5: Commit V0 verification**
+- [x] **Step 5: Commit V0 verification**
 
 ```bash
 git add scripts/verify_repository.py tests/test_verify_repository.py docs/superpowers/plans/2026-09-02-se3-vector-origin-candidates.md
