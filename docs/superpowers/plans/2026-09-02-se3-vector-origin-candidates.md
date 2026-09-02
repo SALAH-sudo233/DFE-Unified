@@ -154,7 +154,7 @@ git commit -m "feat: add vector-origin science candidates"
 - Produces: `MaskFillModelVN.set_science_vector_origin(mode: str | None = None) -> None`
 - Produces: `MaskFillModelVN._embed_compose(compose_feature, compose_pos, idx_ligand, idx_protein)`
 
-- [ ] **Step 1: Write failing behavioral hook tests**
+- [x] **Step 1: Write failing behavioral hook tests**
 
 Because the local baseline intentionally lacks `torch_geometric`, split this
 file into an always-running source-contract class and a behavioral class guarded
@@ -200,13 +200,13 @@ class VectorOriginModelHookTests(unittest.TestCase):
 The dependency guard may skip only the behavioral class. The source-contract
 class must always run and must fail before implementation.
 
-- [ ] **Step 2: Run the hook tests and verify RED**
+- [x] **Step 2: Run the hook tests and verify RED**
 
 Run: `python -m unittest tests.science.test_vector_origin_model_hook -v`
 
 Expected: FAIL because `set_science_vector_origin` and `_embed_compose` are absent.
 
-- [ ] **Step 3: Add the model hook and replace both direct embedding calls**
+- [x] **Step 3: Add the model hook and replace both direct embedding calls**
 
 Add in `__init__`:
 
@@ -245,7 +245,7 @@ Replace the direct `embed_compose(...)` calls in `sample_focal` and `get_loss`
 with `self._embed_compose(...)`. Do not change the `compose_pos` passed to
 `self.encoder`, `compute_df_features_all`, `pos_predictor`, or field queries.
 
-- [ ] **Step 4: Run model-hook, equivariance, and science-hook tests**
+- [x] **Step 4: Run model-hook, equivariance, and science-hook tests**
 
 Run:
 
@@ -255,7 +255,7 @@ python -m unittest tests.science.test_vector_origin_model_hook tests.science.tes
 
 Expected: all tests PASS and the existing SCI-2A hook remains unchanged.
 
-- [ ] **Step 5: Commit model integration**
+- [x] **Step 5: Commit model integration**
 
 ```bash
 git add models/maskfill.py tests/science/test_vector_origin_model_hook.py

@@ -10,6 +10,10 @@ from .frontier import FrontierLayerVN
 from .position import PositionPredictor
 from .df_module import AnalyticalDirectionField
 from dfe.diagnostics.interventions import compute_df_with_diagnostics
+from dfe.science.vector_origin import (
+    normalize_vector_origin_mode,
+    vector_embedding_positions,
+)
 # from .debug import check_true_bonds_len, check_pred_bonds_len
 from utils.misc import unique
 
@@ -51,6 +55,7 @@ class MaskFillModelVN(Module):
         object.__setattr__(self, '_diagnostic_intervention', None)
         object.__setattr__(self, '_diagnostic_observer', None)
         object.__setattr__(self, '_science_intervention', None)
+        object.__setattr__(self, '_science_vector_origin', 'absolute')
 
     def set_diagnostics(self, intervention=None, observer=None):
         """Set non-persistent inference diagnostics without changing model state."""
@@ -60,6 +65,30 @@ class MaskFillModelVN(Module):
     def set_science_intervention(self, intervention=None):
         """Install an explicit SCI-2A raw-feature intervention (inference only)."""
         object.__setattr__(self, '_science_intervention', intervention)
+
+    def set_science_vector_origin(self, mode=None):
+        """Select a non-persistent SCI-1 atom-vector origin candidate."""
+        object.__setattr__(
+            self,
+            '_science_vector_origin',
+            normalize_vector_origin_mode(mode),
+        )
+
+    def _embed_compose(self, compose_feature, compose_pos, idx_ligand, idx_protein):
+        embedding_pos = vector_embedding_positions(
+            compose_pos,
+            idx_protein,
+            self._science_vector_origin,
+        )
+        return embed_compose(
+            compose_feature,
+            embedding_pos,
+            idx_ligand,
+            idx_protein,
+            self.ligand_atom_emb,
+            self.protein_atom_emb,
+            self.emb_dim,
+        )
 
     def _observe_tensor(self, event, value):
         if self._diagnostic_observer is not None:
@@ -166,8 +195,12 @@ class MaskFillModelVN(Module):
             frontier_threshold=0,
         ):
         # # 0: encode 
-        h_compose = embed_compose(compose_feature, compose_pos, idx_ligand, idx_protein,
-                                      self.ligand_atom_emb, self.protein_atom_emb, self.emb_dim)
+        h_compose = self._embed_compose(
+            compose_feature,
+            compose_pos,
+            idx_ligand,
+            idx_protein,
+        )
         h_compose = self.encoder(
             node_attr = h_compose,
             pos = compose_pos,
@@ -379,8 +412,12 @@ class MaskFillModelVN(Module):
         ):
 
         # # emebedding
-        h_compose = embed_compose(compose_feature, compose_pos, idx_ligand, idx_protein,
-                                      self.ligand_atom_emb, self.protein_atom_emb, self.emb_dim)
+        h_compose = self._embed_compose(
+            compose_feature,
+            compose_pos,
+            idx_ligand,
+            idx_protein,
+        )
         # # Encode compose
         h_compose = self.encoder(
             node_attr = h_compose,
