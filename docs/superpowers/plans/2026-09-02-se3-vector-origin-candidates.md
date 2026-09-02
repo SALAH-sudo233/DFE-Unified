@@ -456,7 +456,7 @@ git commit -m "test: verify vector-origin science contract"
 - Consumes the Phase 0 manifest at `/workspace/ayb/experiments/dfe-unified-phase0/phase0-df500k-v1/run-manifest.json`.
 - Produces one preflight report per arm under a unique commit-qualified root.
 
-- [ ] **Step 1: Push the reviewed implementation branch**
+- [x] **Step 1: Push the reviewed implementation branch**
 
 Run locally:
 
@@ -467,7 +467,7 @@ git push origin sci1-se3-df-ablation
 Expected: the remote branch advances to the V0-verified commit. Retry ordinary
 network failures without changing commits or credentials.
 
-- [ ] **Step 2: Transfer a bundle and create an isolated AIDD checkout**
+- [x] **Step 2: Transfer a bundle and create an isolated AIDD checkout**
 
 Create a bundle containing the branch, transfer it through the existing SSH
 alias, then connect with `ssh aidd`. Enter the password only at the interactive
@@ -483,7 +483,7 @@ GIT_LFS_SKIP_SMUDGE=1 git -c filter.lfs.process= -c filter.lfs.smudge= -c filter
 Verify the resolved checkout is below `/workspace/ayb/checkouts` before adding
 or moving files. Do not reuse `/workspace/ayb/checkouts/dfe-unified-sci1-7dec4af`.
 
-- [ ] **Step 3: Run focused and checkpoint strict-load V0 on AIDD**
+- [x] **Step 3: Run focused and checkpoint strict-load V0 on AIDD**
 
 Use `/workspace/ayb/miniconda3/envs/zatom310/bin/python` to run the new science
 tests and load the real checkpoint through the SCI-1 runtime for each of
@@ -494,7 +494,7 @@ Expected: V0 passes for all arms. A failure is `blocked` for missing dependency
 or input, otherwise it is a code-contract failure that must be fixed and
 reverified locally before a new commit and checkout are created.
 
-- [ ] **Step 4: Create three unique V1 roots and run preflight**
+- [x] **Step 4: Create three unique V1 roots and run preflight**
 
 For each arm, create a distinct root named:
 
@@ -519,7 +519,7 @@ Here `<commit>` is replaced by the exact seven-character commit derived above,
 and `<arm>` is executed once each as `absolute`, `centered`, and `zero`; these
 are operator substitutions, not additional protocol choices.
 
-- [ ] **Step 5: Evaluate V1 without weakening the gate**
+- [x] **Step 5: Evaluate V1 without weakening the gate**
 
 For every report verify:
 
@@ -544,7 +544,9 @@ run-root version. Never reuse or delete the failed root.
 - Consumes only candidate arms whose V1 reports pass.
 - Produces full SCI-1 reports, SHA-256 evidence, and a non-sensitive Issue #1 progress comment.
 
-- [ ] **Step 1: Allocate one unique V2 root per V1-passing arm**
+- [x] **Step 1: Allocate one unique V2 root per V1-passing arm**
+
+No V2 root was allocated because no arm passed V1.
 
 Name each root:
 
@@ -571,7 +573,7 @@ Expected: 20 pockets and 2,000 model comparisons; analytical and every model
 event law pass at the frozen tolerances. Exit code `2` is preserved as a
 scientific failure, not retried as infrastructure.
 
-- [ ] **Step 3: Hash and summarize evidence without exposing server paths**
+- [x] **Step 3: Hash and summarize evidence without exposing server paths**
 
 For each report compute SHA-256 and extract only: source commit, arm, stage,
 checkpoint hash, pocket/comparison counts, status, first failure, topology
@@ -579,7 +581,7 @@ status, and encoder scalar/vector maximum error summaries by transform category.
 Do not include passwords, tokens, full absolute input paths, or environment
 contents.
 
-- [ ] **Step 4: Update GitHub Issue #1**
+- [x] **Step 4: Update GitHub Issue #1**
 
 Post a progress comment using the authenticated `SALAH-sudo233` GitHub CLI
 session. Include V0 status, three V1 outcomes, each immutable report hash, V2
@@ -587,7 +589,7 @@ outcomes for passing candidates, and the enforced next action. Explicitly state
 that SCI-2A remains blocked unless V2 passed and that an equivariance pass does
 not establish docking score, pose, affinity, or production quality.
 
-- [ ] **Step 5: Apply the terminal gate**
+- [x] **Step 5: Apply the terminal gate**
 
 If at least one candidate passes V2, report SCI-1 vector-origin completion and
 stop for review before SCI-2A. If all candidates scientifically fail, preserve
