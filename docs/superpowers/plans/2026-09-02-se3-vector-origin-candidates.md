@@ -54,11 +54,11 @@ class VectorOriginTests(unittest.TestCase):
         self.pos = torch.tensor([[2.0, 0.0, 0.0], [4.0, 2.0, 0.0], [0.0, 2.0, 0.0]])
         self.idx_protein = torch.tensor([1, 2])
 
-    def test_none_and_absolute_preserve_values_without_aliasing(self):
+    def test_none_and_absolute_preserve_the_existing_tensor(self):
         for mode in (None, "absolute"):
             actual = vector_embedding_positions(self.pos, self.idx_protein, mode)
             self.assertTrue(torch.equal(actual, self.pos))
-            self.assertNotEqual(actual.data_ptr(), self.pos.data_ptr())
+            self.assertEqual(actual.data_ptr(), self.pos.data_ptr())
 
     def test_centered_uses_protein_centroid_for_all_atoms(self):
         expected = self.pos - self.pos[self.idx_protein].mean(dim=0, keepdim=True)
@@ -121,7 +121,7 @@ def vector_embedding_positions(
     if compose_pos.ndim != 2 or compose_pos.shape[-1] != 3:
         raise ValueError("compose_pos must have shape [N, 3]")
     if normalized == "absolute":
-        return compose_pos.clone()
+        return compose_pos
     if normalized == "zero":
         return torch.zeros_like(compose_pos)
     if idx_protein.numel() == 0:
@@ -156,9 +156,13 @@ git commit -m "feat: add vector-origin science candidates"
 
 - [ ] **Step 1: Write failing behavioral hook tests**
 
-Use an uninitialized lightweight module shell and mock the existing
-`models.maskfill.embed_compose` function so the test verifies the exact tensor
-sent to AtomEmbedding without constructing the full CUDA model:
+Because the local baseline intentionally lacks `torch_geometric`, split this
+file into an always-running source-contract class and a behavioral class guarded
+by dependency availability. The source contract verifies that both inference
+and loss call the shared helper and that encoder/DF calls still receive the
+original `compose_pos`. When model dependencies are importable, use an
+uninitialized lightweight module shell and mock `models.maskfill.embed_compose`
+to verify the exact tensor sent to AtomEmbedding:
 
 ```python
 class VectorOriginModelHookTests(unittest.TestCase):
@@ -192,6 +196,9 @@ class VectorOriginModelHookTests(unittest.TestCase):
         self.model.set_science_vector_origin()
         self.assertEqual(self.model._science_vector_origin, "absolute")
 ```
+
+The dependency guard may skip only the behavioral class. The source-contract
+class must always run and must fail before implementation.
 
 - [ ] **Step 2: Run the hook tests and verify RED**
 

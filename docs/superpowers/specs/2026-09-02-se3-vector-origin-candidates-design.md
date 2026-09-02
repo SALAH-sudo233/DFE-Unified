@@ -76,7 +76,9 @@ checkpoint loads with `strict=True` in every arm.
 `MaskFillModelVN` owns a non-persistent science-only setting named for the
 vector-origin mode. A small helper derives the vector-embedding positions from
 `compose_pos` and `idx_protein`, validates the enum, rejects an empty protein
-selection for `centered`, and returns a new tensor without mutating inputs.
+selection for `centered`, and never mutates inputs. The `absolute` mode returns
+the original tensor reference so the disabled/default path adds no allocation
+or numerical change; transformed modes return derived tensors.
 
 Both inference and loss paths call one shared compose-embedding helper so the
 setting has one implementation. With no explicit science setting, the helper
