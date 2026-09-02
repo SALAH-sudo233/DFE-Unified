@@ -141,6 +141,19 @@ def parity_projection(record: Mapping[str, object]) -> dict[str, object]:
     }
 
 
+def _rank_logp_features(candidates: Sequence[object]) -> np.ndarray:
+    """Return fixed-width ranking features for candidates with/without bonds."""
+    features = []
+    for candidate in candidates:
+        values = np.asarray(candidate.average_logp[2:], dtype=float).reshape(-1)
+        if values.size == 2:
+            values = np.concatenate((values, np.zeros(1, dtype=float)))
+        if values.size != 3:
+            raise ValueError(f"expected 2 or 3 rank log-probability values, got {values.size}")
+        features.append(values)
+    return np.asarray(features, dtype=float).reshape((-1, 3))
+
+
 def _write_sdf(chem, molecule, path: Path) -> None:
     chem.MolToMolFile(molecule, str(path))
     if not path.is_file() or path.stat().st_size == 0:
@@ -661,7 +674,7 @@ def _run_attempt(
             tracer.decision(step, "attempt.failed", {"reason": "queue_empty"})
             return
         probabilities = runtime["logp_to_rank_prob"](
-            np.array([candidate.average_logp[2:] for candidate in queue_tmp]),
+            _rank_logp_features(queue_tmp),
             queue_weights,
         )
         count = min(int(runtime["policy"].sample.beam_size), len(queue_tmp))

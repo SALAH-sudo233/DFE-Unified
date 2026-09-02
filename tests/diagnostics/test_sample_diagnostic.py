@@ -10,6 +10,7 @@ from dfe.diagnostics.ledger import AttemptLedger, replay_ledger
 from dfe.diagnostics.sampling import relax_initialization_thresholds
 from sample_diagnostic import (
     _attempt_payload,
+    _rank_logp_features,
     _write_sdf,
     classify_initial_queue,
     close_requested_after_bootstrap_failure,
@@ -21,6 +22,15 @@ from sample_diagnostic import (
 
 
 class DiagnosticSamplerContractTests(unittest.TestCase):
+    def test_rank_logp_features_pad_candidates_without_bonds(self):
+        candidates = [
+            SimpleNamespace(average_logp=[-1.0, -2.0, -0.3, -0.4]),
+            SimpleNamespace(average_logp=[-1.0, -2.0, -0.5, -0.6, -0.7]),
+        ]
+        features = _rank_logp_features(candidates)
+        self.assertEqual(features.shape, (2, 3))
+        self.assertEqual(features.tolist(), [[-0.3, -0.4, 0.0], [-0.5, -0.6, -0.7]])
+
     def test_parity_projection_excludes_molecular_content_and_paths(self):
         record = {
             "status": "evaluated",
