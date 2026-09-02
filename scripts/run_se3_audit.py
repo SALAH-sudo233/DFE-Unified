@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import copy
 import json
+import subprocess
 import sys
 import traceback
 from pathlib import Path
@@ -36,6 +37,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--device", required=True)
     parser.add_argument("--rotations", type=int, default=100)
     parser.add_argument("--translations", type=int, default=10)
+    parser.add_argument("--stage", choices=("preflight", "full"), default="full")
+    parser.add_argument(
+        "--vector-origin-mode",
+        choices=("absolute", "centered", "zero"),
+        default="absolute",
+    )
     parser.add_argument("--output", type=Path)
     return parser.parse_args()
 
@@ -57,10 +64,86 @@ def _translations(seed: int, count: int) -> np.ndarray:
     return generator.uniform(-10.0, 10.0, size=(count, 3))
 
 
-def _analytical_audit(
-    pockets: list[dict[str, object]],
+def _preflight_transforms(
+    rotation: np.ndarray,
+    translation: np.ndarray,
+) -> tuple[dict[str, object], ...]:
+    identity = np.eye(3, dtype=np.float64)
+    zero = np.zeros(3, dtype=np.float64)
+    return (
+        {"category": "identity", "rotation": identity, "translation": zero},
+        {"category": "rotation", "rotation": rotation, "translation": zero},
+        {
+            "category": "translation",
+            "rotation": identity,
+            "translation": translation,
+        },
+        {"category": "rigid", "rotation": rotation, "translation": translation},
+    )
+
+
+def _full_transforms(
     rotations: np.ndarray,
     translations: np.ndarray,
+) -> tuple[dict[str, object], ...]:
+    return tuple(
+        {
+            "category": "rigid",
+            "rotation": rotation,
+            "translation": translations[index % len(translations)],
+        }
+        for index, rotation in enumerate(rotations)
+    )
+
+
+def _preflight_gate(
+    records: list[dict[str, object]],
+    *,
+    tolerance: float,
+) -> tuple[bool, str | None]:
+    required_categories = ("identity", "rotation", "translation", "rigid")
+    by_category = {
+        str(record.get("transform_category")): record for record in records
+    }
+    for category in required_categories:
+        if category not in by_category:
+            return False, f"{category}:missing_transform"
+        record = by_category[category]
+        if record.get("topology_match") is not True:
+            return False, f"{category}:topology.edge_index"
+        events = {
+            str(event.get("key")): event for event in record.get("events", [])
+        }
+        for event_name in ("encoder.scalar", "encoder.vector"):
+            key = next(
+                (item for item in events if item.endswith(f":{event_name}")),
+                None,
+            )
+            if key is None:
+                return False, f"{category}:missing:{event_name}"
+            error = events[key].get("normalized_max")
+            if error is None or not np.isfinite(float(error)):
+                return False, f"{category}:{key}"
+            if float(error) >= tolerance:
+                return False, f"{category}:{key}"
+    return True, None
+
+
+def _current_commit() -> str:
+    result = subprocess.run(
+        ["git", "rev-parse", "HEAD"],
+        cwd=ROOT,
+        check=True,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+    )
+    return result.stdout.strip()
+
+
+def _analytical_audit(
+    pockets: list[dict[str, object]],
+    transforms: tuple[dict[str, object], ...],
     tolerance: float,
 ) -> dict[str, object]:
     module = AnalyticalDirectionField(hidden_dim=64).double().eval()
@@ -74,8 +157,9 @@ def _analytical_audit(
         pocket_pos = torch.from_numpy(atoms.coordinates).double()
         pocket_types = torch.zeros(len(pocket_pos), dtype=torch.long)
         pocket_mask = torch.ones(len(pocket_pos), dtype=torch.bool)
-        for transform_index, rotation in enumerate(rotations):
-            translation = translations[transform_index % len(translations)]
+        for transform_index, transform in enumerate(transforms):
+            rotation = np.asarray(transform["rotation"])
+            translation = np.asarray(transform["translation"])
             report = audit_analytical_df_state(
                 module,
                 query,
@@ -90,6 +174,7 @@ def _analytical_audit(
                 {
                     "pocket_id": pocket["pocket_id"],
                     "transform_index": transform_index,
+                    "transform_category": transform["category"],
                     **report.to_dict(),
                 }
             )
@@ -204,57 +289,97 @@ def _run_model_state(runtime, base_data, positions: torch.Tensor, device: str):
             n_samples_atom=-1,
         )
     model.set_diagnostics()
-    return observer
+    return observer, batch.compose_knn_edge_index.detach().cpu().clone()
 
 
 def _model_audit(
     pockets: list[dict[str, object]],
-    rotations: np.ndarray,
-    translations: np.ndarray,
+    transforms: tuple[dict[str, object], ...],
     checkpoint_path: Path,
     device: str,
     tolerance: float,
+    stage: str,
+    vector_origin_mode: str,
 ) -> dict[str, object]:
     runtime = _load_model_runtime(checkpoint_path, device)
     reports = []
-    for pocket in pockets:
-        base_data = _base_data(runtime, _pocket_path(pocket))
-        positions = base_data.protein_pos.float()
-        reference = _run_model_state(runtime, base_data, positions, device)
-        for transform_index, rotation in enumerate(rotations):
-            translation = translations[transform_index % len(translations)]
-            rotation_tensor = torch.as_tensor(rotation, dtype=positions.dtype)
-            translation_tensor = torch.as_tensor(translation, dtype=positions.dtype)
-            moved = positions @ rotation_tensor.T + translation_tensor
-            transformed = _run_model_state(runtime, base_data, moved, device)
-            report = compare_event_sets(
-                reference,
-                transformed,
-                rotation,
-                translation,
-                tolerance=tolerance,
+    model = runtime["model"]
+    model.set_science_vector_origin(vector_origin_mode)
+    try:
+        for pocket in pockets:
+            base_data = _base_data(runtime, _pocket_path(pocket))
+            positions = base_data.protein_pos.float()
+            reference, reference_edges = _run_model_state(
+                runtime,
+                base_data,
+                positions,
+                device,
             )
-            reports.append(
-                {
-                    "pocket_id": pocket["pocket_id"],
-                    "transform_index": transform_index,
-                    **report.to_dict(),
-                }
-            )
-    first_failure = next(
-        (
-            f"{record['pocket_id']}:{record['first_failure']}"
-            for record in reports
-            if not record["passed"]
-        ),
-        None,
-    )
+            for transform_index, transform in enumerate(transforms):
+                rotation = np.asarray(transform["rotation"])
+                translation = np.asarray(transform["translation"])
+                rotation_tensor = torch.as_tensor(
+                    rotation,
+                    dtype=positions.dtype,
+                )
+                translation_tensor = torch.as_tensor(
+                    translation,
+                    dtype=positions.dtype,
+                )
+                moved = positions @ rotation_tensor.T + translation_tensor
+                transformed, transformed_edges = _run_model_state(
+                    runtime,
+                    base_data,
+                    moved,
+                    device,
+                )
+                topology_match = torch.equal(
+                    reference_edges,
+                    transformed_edges,
+                )
+                report = compare_event_sets(
+                    reference,
+                    transformed,
+                    rotation,
+                    translation,
+                    tolerance=tolerance,
+                ).to_dict()
+                if not topology_match:
+                    report["passed"] = False
+                    report["first_failure"] = "topology.edge_index"
+                reports.append(
+                    {
+                        "pocket_id": pocket["pocket_id"],
+                        "transform_index": transform_index,
+                        "transform_category": transform["category"],
+                        "topology_match": topology_match,
+                        **report,
+                    }
+                )
+    finally:
+        model.set_science_vector_origin()
+    if stage == "preflight":
+        passed, first_failure = _preflight_gate(
+            reports,
+            tolerance=tolerance,
+        )
+    else:
+        first_failure = next(
+            (
+                f"{record['pocket_id']}:{record['first_failure']}"
+                for record in reports
+                if not record["passed"]
+            ),
+            None,
+        )
+        passed = first_failure is None
     return {
-        "passed": first_failure is None,
+        "passed": passed,
         "first_failure": first_failure,
         "state_count": len(pockets),
         "comparison_count": len(reports),
         "checkpoint_strict_load": True,
+        "vector_origin_mode": vector_origin_mode,
         "reports": reports,
     }
 
@@ -274,25 +399,35 @@ def run(args: argparse.Namespace) -> tuple[int, dict[str, object]]:
         raise ValueError("rotation count differs from the frozen manifest")
     if args.translations != manifest["protocol"]["se3"]["translations"]:
         raise ValueError("translation count differs from the frozen manifest")
-    pockets = _read_jsonl(pockets_path)[:20]
-    if len(pockets) < 20:
+    all_pockets = _read_jsonl(pockets_path)[:20]
+    if len(all_pockets) < 20:
         raise ValueError("model SE(3) audit requires at least 20 manifest pockets")
     rotations = sample_so3(20260901, args.rotations)
     translations = _translations(20260901, args.translations)
+    stage = getattr(args, "stage", "full")
+    vector_origin_mode = getattr(args, "vector_origin_mode", "absolute")
+    if stage == "preflight":
+        pockets = all_pockets[:1]
+        transforms = _preflight_transforms(rotations[0], translations[0])
+    elif stage == "full":
+        pockets = all_pockets
+        transforms = _full_transforms(rotations, translations)
+    else:
+        raise ValueError(f"unknown SCI-1 stage: {stage}")
     se3_protocol = manifest["protocol"]["se3"]
     analytical = _analytical_audit(
         pockets,
-        rotations,
-        translations,
+        transforms,
         float(se3_protocol["analytical_float64_tolerance"]),
     )
     model = _model_audit(
         pockets,
-        rotations,
-        translations,
+        transforms,
         checkpoint_path,
         args.device,
         float(se3_protocol["model_float32_tolerance"]),
+        stage,
+        vector_origin_mode,
     )
     passed = bool(analytical["passed"] and model["passed"])
     return (
@@ -300,8 +435,13 @@ def run(args: argparse.Namespace) -> tuple[int, dict[str, object]]:
         {
             "schema_version": manifest["schema_version"],
             "manifest_hash": manifest["manifest_hash"],
+            "source_commit": _current_commit(),
+            "input_source_commit": manifest.get("git", {}).get("commit"),
             "status": "pass" if passed else "scientific_failure",
             "device": args.device,
+            "stage": stage,
+            "vector_origin_mode": vector_origin_mode,
+            "checkpoint_sha256": checkpoint["sha256"],
             "rotations": args.rotations,
             "translations": args.translations,
             "analytical": analytical,

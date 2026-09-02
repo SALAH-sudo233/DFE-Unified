@@ -29,7 +29,8 @@
 - Create `dfe/science/vector_origin.py`: enum validation and pure vector-embedding position transformation.
 - Create `tests/science/test_vector_origin.py`: mathematical laws, mutation safety, and invalid-input tests.
 - Modify `models/maskfill.py`: non-persistent mode setter and one shared compose-embedding path for inference and loss.
-- Modify `scripts/run_sci1_se3_audit.py`: arm/stage CLI, preflight transforms, topology evidence, and report metadata.
+- Modify `scripts/run_sci1_se3_audit.py`: science CLI arguments and provenance wrapper.
+- Modify `scripts/run_se3_audit.py`: reuse the existing Phase 0 model audit while adding arm/stage execution, preflight transforms, topology evidence, and report metadata.
 - Modify `tests/science/test_sci1_cli.py`: CLI defaults, mode/stage validation, and create-only failure behavior.
 - Create `tests/science/test_vector_origin_model_hook.py`: behavioral model-hook integration without checkpoint files.
 - Modify `scripts/verify_repository.py`: require the new science helper, tests, spec, and plan.
@@ -266,15 +267,16 @@ git commit -m "feat: apply science vector origin at atom embedding"
 
 **Files:**
 - Modify: `scripts/run_sci1_se3_audit.py`
+- Modify: `scripts/run_se3_audit.py`
 - Modify: `tests/science/test_sci1_cli.py`
 
 **Interfaces:**
 - Consumes: `MaskFillModelVN.set_science_vector_origin(mode)` from Task 2.
 - Produces CLI options: `--stage {preflight,full}` and `--vector-origin-mode {absolute,centered,zero}`.
-- Produces: `_preflight_transforms(rotation: np.ndarray, translation: np.ndarray) -> tuple[dict[str, object], ...]`.
+- Produces in `scripts/run_se3_audit.py`: `_preflight_transforms(rotation: np.ndarray, translation: np.ndarray) -> tuple[dict[str, object], ...]` and `_preflight_gate(...)`.
 - Produces report fields: `stage`, `vector_origin_mode`, `checkpoint_sha256`, `checkpoint_strict_load`, `topology_match`, and per-record `transform_category`.
 
-- [ ] **Step 1: Extend CLI tests before implementation**
+- [x] **Step 1: Extend CLI tests before implementation**
 
 ```python
 def test_help_lists_vector_origin_and_stage(self):
@@ -302,15 +304,16 @@ Add a direct test asserting `_preflight_transforms` returns categories in this
 exact order: `identity`, `rotation`, `translation`, `rigid`, with identity
 `R=I,t=0`, rotation `t=0`, translation `R=I`, and rigid using both inputs.
 
-- [ ] **Step 2: Run CLI tests and verify RED**
+- [x] **Step 2: Run CLI tests and verify RED**
 
 Run: `python -m unittest tests.science.test_sci1_cli -v`
 
 Expected: FAIL because the two CLI flags and transform helper are absent.
 
-- [ ] **Step 3: Implement parser and deterministic transform suite**
+- [x] **Step 3: Implement parser and deterministic transform suite**
 
-Add parser definitions:
+Add parser definitions to the SCI-1 wrapper and the standalone Phase 0 audit
+parser, then pass both values through the wrapper's `argparse.Namespace`:
 
 ```python
 parser.add_argument("--stage", choices=("preflight", "full"), default="full")
@@ -335,11 +338,11 @@ def _preflight_transforms(rotation, translation):
     )
 ```
 
-For `preflight`, select exactly the first manifest pocket and the first frozen
+For `preflight`, the existing Phase 0 audit selects exactly the first manifest pocket and the first frozen
 rotation and translation. For `full`, preserve the existing 20-pocket and
 100-rotation loop unchanged.
 
-- [ ] **Step 4: Route the arm into the model and record topology**
+- [x] **Step 4: Route the arm into the model and record topology**
 
 After strict checkpoint loading, call:
 
@@ -347,7 +350,7 @@ After strict checkpoint loading, call:
 model.set_science_vector_origin(vector_origin_mode)
 ```
 
-Refactor `_run_model_state` to return both the observer and a detached CPU copy
+In `scripts/run_se3_audit.py`, refactor `_run_model_state` to return both the observer and a detached CPU copy
 of `compose_knn_edge_index`. Compare every transformed edge tensor to the
 reference with `torch.equal`; include `topology_match` in each record. A
 topology mismatch yields a complete scientific-failure record with first
@@ -356,7 +359,7 @@ failure `topology.edge_index`, rather than silently comparing different graphs.
 Set the arm back to `absolute` after each model audit, including exception
 cleanup, and leave the SCI-2A diagnostics hook untouched.
 
-- [ ] **Step 5: Implement V1 gate evaluation and report metadata**
+- [x] **Step 5: Implement V1 gate evaluation and report metadata**
 
 For preflight, inspect the named `encoder.scalar` and `encoder.vector` events in
 all four records. Set `model.passed=True` only when topology matches, strict load
@@ -368,7 +371,7 @@ For full, preserve the existing all-event `AuditReport.passed` rule. Include the
 manifest checkpoint hash directly as `checkpoint_sha256` and write `stage` and
 `vector_origin_mode` at report top level.
 
-- [ ] **Step 6: Run focused CLI and audit tests**
+- [x] **Step 6: Run focused CLI and audit tests**
 
 Run:
 
@@ -380,7 +383,7 @@ python scripts/run_sci1_se3_audit.py --help
 Expected: tests PASS; help exits `0`; existing missing-manifest behavior still
 writes one create-only `infrastructure_failure` report when arguments are valid.
 
-- [ ] **Step 7: Commit the runner**
+- [x] **Step 7: Commit the runner**
 
 ```bash
 git add scripts/run_sci1_se3_audit.py tests/science/test_sci1_cli.py

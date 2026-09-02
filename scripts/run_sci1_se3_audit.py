@@ -15,7 +15,11 @@ if str(ROOT) not in sys.path:
 
 from dfe.diagnostics.contracts import write_new_manifest
 from dfe.science.artifact_contract import assert_create_only_output, load_science_manifest
-from scripts.run_se3_audit import run as run_phase0_audit
+from scripts.run_se3_audit import (  # noqa: F401
+    _preflight_gate,
+    _preflight_transforms,
+    run as run_phase0_audit,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -26,6 +30,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--rotations", type=int, default=100)
     parser.add_argument("--translations", type=int, default=10)
+    parser.add_argument("--stage", choices=("preflight", "full"), default="full")
+    parser.add_argument(
+        "--vector-origin-mode",
+        choices=("absolute", "centered", "zero"),
+        default="absolute",
+    )
     return parser.parse_args()
 
 
@@ -37,6 +47,8 @@ def run(args: argparse.Namespace) -> tuple[int, dict[str, object]]:
         device=args.device,
         rotations=args.rotations,
         translations=args.translations,
+        stage=args.stage,
+        vector_origin_mode=args.vector_origin_mode,
         output=None,
     )
     exit_code, report = run_phase0_audit(phase0_args)
