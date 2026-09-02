@@ -18,6 +18,8 @@ class AtomEmbedding(Module):
         assert vector_input.shape[1:] == (3, ), 'Not support. Only one vector can be input'
         sca_emb = self.emb_sca(scalar_input[:, :self.in_scalar])  # b, f -> b, f'
         vec_emb = vector_input.unsqueeze(-1)  # b, 3 -> b, 3, 1
-        vec_emb = self.emb_vec(vec_emb).transpose(1, -1)  # b, 1, 3 -> b, f', 3
+        # Preserve the frozen bias parameter for strict checkpoint loading, but
+        # do not add a coordinate-wise constant to an SO(3) vector feature.
+        vec_emb = F.linear(vec_emb, self.emb_vec.weight, None).transpose(1, -1)  # b, 1, 3 -> b, f', 3
         return sca_emb, vec_emb
         

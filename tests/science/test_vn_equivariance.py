@@ -20,6 +20,10 @@ class VNSourceContractTests(unittest.TestCase):
             source,
         )
 
+    def test_atom_embedding_does_not_apply_coordinate_bias(self):
+        source = (Path(__file__).parents[2] / "models" / "embedding.py").read_text(encoding="utf-8")
+        self.assertIn("F.linear(vec_emb, self.emb_vec.weight, None)", source)
+
 
 @unittest.skipIf(torch is None, f"VN tests require the model dependency stack: {_IMPORT_ERROR}")
 class VNEquivarianceTests(unittest.TestCase):
