@@ -29,6 +29,10 @@ from dfe.diagnostics.observer import TensorObserver  # noqa: E402
 from dfe.diagnostics.openness import parse_pdb_heavy_atoms  # noqa: E402
 from dfe.diagnostics.se3 import sample_so3  # noqa: E402
 from models.df_module import AnalyticalDirectionField  # noqa: E402
+from dfe.science.model_precision import (  # noqa: E402
+    normalize_model_dtype,
+    torch_model_dtype,
+)
 
 
 def parse_args() -> argparse.Namespace:
@@ -42,6 +46,11 @@ def parse_args() -> argparse.Namespace:
         "--vector-origin-mode",
         choices=("absolute", "centered", "zero"),
         default="absolute",
+    )
+    parser.add_argument(
+        "--model-dtype",
+        choices=("float32", "float64"),
+        default="float32",
     )
     parser.add_argument("--output", type=Path)
     return parser.parse_args()
@@ -190,7 +199,11 @@ def _analytical_audit(
     }
 
 
-def _load_model_runtime(checkpoint_path: Path, device: str):
+def _load_model_runtime(
+    checkpoint_path: Path,
+    device: str,
+    model_dtype: str | None = None,
+):
     try:
         from torch_geometric.data import Batch
         from torch_geometric.transforms import Compose
@@ -224,6 +237,8 @@ def _load_model_runtime(checkpoint_path: Path, device: str):
     incompatible = model.load_state_dict(checkpoint["model"], strict=True)
     if incompatible.missing_keys or incompatible.unexpected_keys:
         raise ValueError(f"checkpoint state mismatch: {incompatible}")
+    selected_dtype = normalize_model_dtype(model_dtype)
+    model.to(device=device, dtype=torch_model_dtype(selected_dtype))
     model.eval()
     transform = Compose(
         [
@@ -248,6 +263,8 @@ def _load_model_runtime(checkpoint_path: Path, device: str):
         "ProteinLigandData": ProteinLigandData,
         "PDBProtein": PDBProtein,
         "torchify_dict": torchify_dict,
+        "model_dtype": selected_dtype,
+        "checkpoint_strict_load": True,
     }
 
 
@@ -270,7 +287,8 @@ def _base_data(runtime, pocket_path: Path):
 
 def _run_model_state(runtime, base_data, positions: torch.Tensor, device: str):
     data = copy.deepcopy(base_data)
-    data.protein_pos = positions.cpu()
+    model_dtype = torch_model_dtype(runtime["model_dtype"])
+    data.protein_pos = positions.to(dtype=model_dtype).cpu()
     data = runtime["composer"](data)
     batch = runtime["Batch"].from_data_list(
         [data], follow_batch=runtime["FOLLOW_BATCH"]
@@ -280,8 +298,8 @@ def _run_model_state(runtime, base_data, positions: torch.Tensor, device: str):
     model.set_diagnostics(observer=observer.at_step(0))
     with torch.no_grad():
         model.sample_init(
-            compose_feature=batch.compose_feature.float(),
-            compose_pos=batch.compose_pos,
+            compose_feature=batch.compose_feature.to(dtype=model_dtype),
+            compose_pos=batch.compose_pos.to(dtype=model_dtype),
             idx_protein=batch.idx_protein_in_compose,
             compose_knn_edge_index=batch.compose_knn_edge_index,
             compose_knn_edge_feature=batch.compose_knn_edge_feature,
@@ -300,15 +318,18 @@ def _model_audit(
     tolerance: float,
     stage: str,
     vector_origin_mode: str,
+    model_dtype: str,
 ) -> dict[str, object]:
-    runtime = _load_model_runtime(checkpoint_path, device)
+    runtime = _load_model_runtime(checkpoint_path, device, model_dtype)
     reports = []
     model = runtime["model"]
     model.set_science_vector_origin(vector_origin_mode)
     try:
         for pocket in pockets:
             base_data = _base_data(runtime, _pocket_path(pocket))
-            positions = base_data.protein_pos.float()
+            positions = base_data.protein_pos.to(
+                dtype=torch_model_dtype(runtime["model_dtype"])
+            )
             reference, reference_edges = _run_model_state(
                 runtime,
                 base_data,
@@ -378,8 +399,9 @@ def _model_audit(
         "first_failure": first_failure,
         "state_count": len(pockets),
         "comparison_count": len(reports),
-        "checkpoint_strict_load": True,
+        "checkpoint_strict_load": runtime["checkpoint_strict_load"],
         "vector_origin_mode": vector_origin_mode,
+        "model_dtype": runtime["model_dtype"],
         "reports": reports,
     }
 
@@ -406,6 +428,7 @@ def run(args: argparse.Namespace) -> tuple[int, dict[str, object]]:
     translations = _translations(20260901, args.translations)
     stage = getattr(args, "stage", "full")
     vector_origin_mode = getattr(args, "vector_origin_mode", "absolute")
+    model_dtype = normalize_model_dtype(getattr(args, "model_dtype", "float32"))
     if stage == "preflight":
         pockets = all_pockets[:1]
         transforms = _preflight_transforms(rotations[0], translations[0])
@@ -428,6 +451,7 @@ def run(args: argparse.Namespace) -> tuple[int, dict[str, object]]:
         float(se3_protocol["model_float32_tolerance"]),
         stage,
         vector_origin_mode,
+        model_dtype,
     )
     passed = bool(analytical["passed"] and model["passed"])
     return (
@@ -441,6 +465,7 @@ def run(args: argparse.Namespace) -> tuple[int, dict[str, object]]:
             "device": args.device,
             "stage": stage,
             "vector_origin_mode": vector_origin_mode,
+            "model_dtype": model_dtype,
             "checkpoint_sha256": checkpoint["sha256"],
             "rotations": args.rotations,
             "translations": args.translations,

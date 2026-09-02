@@ -36,6 +36,11 @@ def parse_args() -> argparse.Namespace:
         choices=("absolute", "centered", "zero"),
         default="absolute",
     )
+    parser.add_argument(
+        "--model-dtype",
+        choices=("float32", "float64"),
+        default="float32",
+    )
     return parser.parse_args()
 
 
@@ -49,6 +54,7 @@ def run(args: argparse.Namespace) -> tuple[int, dict[str, object]]:
         translations=args.translations,
         stage=args.stage,
         vector_origin_mode=args.vector_origin_mode,
+        model_dtype=args.model_dtype,
         output=None,
     )
     exit_code, report = run_phase0_audit(phase0_args)

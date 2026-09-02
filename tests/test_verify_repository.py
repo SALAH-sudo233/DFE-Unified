@@ -44,6 +44,10 @@ class ScienceSourceVerificationTests(unittest.TestCase):
             "tests/science/test_vector_origin_model_hook.py",
             "docs/superpowers/specs/2026-09-02-se3-vector-origin-candidates-design.md",
             "docs/superpowers/plans/2026-09-02-se3-vector-origin-candidates.md",
+            "dfe/science/model_precision.py",
+            "tests/science/test_model_precision.py",
+            "docs/superpowers/specs/2026-09-02-zero-fp64-science-design.md",
+            "docs/superpowers/plans/2026-09-02-zero-fp64-science.md",
         )
 
         for path in required:

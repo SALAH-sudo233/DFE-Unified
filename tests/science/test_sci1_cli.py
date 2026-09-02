@@ -25,6 +25,28 @@ class SCI1CLITests(unittest.TestCase):
         self.assertIn("--manifest", result.stdout)
         self.assertIn("--vector-origin-mode", result.stdout)
         self.assertIn("--stage", result.stdout)
+        self.assertIn("--model-dtype", result.stdout)
+
+    def test_invalid_model_dtype_is_rejected_without_output(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / "report.json"
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "scripts/run_sci1_se3_audit.py",
+                    "--manifest",
+                    "missing.json",
+                    "--model-dtype",
+                    "bfloat16",
+                    "--output",
+                    str(output),
+                ],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            self.assertEqual(result.returncode, 2)
+            self.assertFalse(output.exists())
 
     def test_invalid_vector_origin_is_rejected_without_output(self):
         with tempfile.TemporaryDirectory() as tmp:

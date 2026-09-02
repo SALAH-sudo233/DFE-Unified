@@ -205,6 +205,10 @@ def verify_science_sources() -> str:
         "tests/science/test_vector_origin_model_hook.py",
         "docs/superpowers/specs/2026-09-02-se3-vector-origin-candidates-design.md",
         "docs/superpowers/plans/2026-09-02-se3-vector-origin-candidates.md",
+        "dfe/science/model_precision.py",
+        "tests/science/test_model_precision.py",
+        "docs/superpowers/specs/2026-09-02-zero-fp64-science-design.md",
+        "docs/superpowers/plans/2026-09-02-zero-fp64-science.md",
     )
     missing = [path for path in required_paths if not (ROOT / path).is_file()]
     if missing:
@@ -212,16 +216,20 @@ def verify_science_sources() -> str:
     from dfe.science import SCIENCE_EXPERIMENT_IDS
     from dfe.science.feature_interventions import INTERVENTIONS
     from dfe.science.vector_origin import VECTOR_ORIGIN_MODES
+    from dfe.science.model_precision import MODEL_DTYPES
     if SCIENCE_EXPERIMENT_IDS != ("SCI-1-SE3-v1", "SCI-2A-FEATURE-v1"):
         raise ValueError("unexpected science experiment IDs")
     if len(INTERVENTIONS) != 8:
         raise ValueError("SCI-2A intervention matrix must contain eight frozen arms")
     if VECTOR_ORIGIN_MODES != ("absolute", "centered", "zero"):
         raise ValueError("SCI-1 vector-origin matrix must contain three frozen arms")
+    if MODEL_DTYPES != ("float32", "float64"):
+        raise ValueError("SCI-1 model dtype matrix must contain float32 and float64")
     return (
         f"science_ids={len(SCIENCE_EXPERIMENT_IDS)}, "
         f"feature_arms={len(INTERVENTIONS)}, "
         f"vector_origin_arms={len(VECTOR_ORIGIN_MODES)}"
+        f", model_dtypes={len(MODEL_DTYPES)}"
     )
 
 
