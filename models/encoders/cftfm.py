@@ -6,6 +6,21 @@ from math import pi as PI
 from models.common import GaussianSmearing, EdgeExpansion
 from models.invariant import GVLinear, VNLeakyReLU, MessageModule
 
+
+class EquivariantVectorNorm(Module):
+    """Vector normalization that preserves SO(3) while retaining checkpoint keys."""
+
+    def __init__(self, channels: int):
+        super().__init__()
+        self.weight = torch.nn.Parameter(torch.ones(channels, 3))
+        self.bias = torch.nn.Parameter(torch.zeros(channels, 3))
+        self.eps = 1e-5
+
+    def forward(self, value):
+        rms = torch.sqrt(torch.mean(value * value, dim=-1, keepdim=True) + self.eps)
+        scale = self.weight.mean(dim=-1).view(1, -1, 1)
+        return value / rms * scale
+
 class CFTransformerEncoderVN(Module):
     
     def __init__(self, hidden_channels=[256, 64], edge_channels=64, num_edge_types=4, key_channels=128, num_heads=4, num_interactions=6, k=32, cutoff=10.0):
@@ -72,7 +87,7 @@ class AttentionInteractionBlockVN(Module):
         self.out_transform = GVLinear(hidden_channels[0], hidden_channels[1], hidden_channels[0], hidden_channels[1])
 
         self.layernorm_sca = LayerNorm([hidden_channels[0]])
-        self.layernorm_vec = LayerNorm([hidden_channels[1], 3])
+        self.layernorm_vec = EquivariantVectorNorm(hidden_channels[1])
 
     def forward(self, x, edge_index, edge_feature, edge_vector):
         """
@@ -103,5 +118,4 @@ class AttentionInteractionBlockVN(Module):
         out_vec = self.layernorm_vec(out_vec)
         out = self.out_transform((self.act_sca(out_sca), self.act_vec(out_vec)))
         return out
-
 

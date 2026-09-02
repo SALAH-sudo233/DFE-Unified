@@ -24,6 +24,10 @@ class VNSourceContractTests(unittest.TestCase):
         source = (Path(__file__).parents[2] / "models" / "embedding.py").read_text(encoding="utf-8")
         self.assertIn("F.linear(vec_emb, self.emb_vec.weight, None)", source)
 
+    def test_encoder_uses_equivariant_vector_normalization(self):
+        source = (Path(__file__).parents[2] / "models" / "encoders" / "cftfm.py").read_text(encoding="utf-8")
+        self.assertIn("self.layernorm_vec = EquivariantVectorNorm(hidden_channels[1])", source)
+
 
 @unittest.skipIf(torch is None, f"VN tests require the model dependency stack: {_IMPORT_ERROR}")
 class VNEquivarianceTests(unittest.TestCase):
