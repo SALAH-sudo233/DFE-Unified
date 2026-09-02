@@ -46,7 +46,7 @@
 - Produces: `normalize_vector_origin_mode(mode: str | None) -> str`
 - Produces: `vector_embedding_positions(compose_pos: Tensor, idx_protein: Tensor, mode: str | None) -> Tensor`
 
-- [ ] **Step 1: Write the failing mathematical and validation tests**
+- [x] **Step 1: Write the failing mathematical and validation tests**
 
 ```python
 class VectorOriginTests(unittest.TestCase):
@@ -87,13 +87,13 @@ class VectorOriginTests(unittest.TestCase):
             normalize_vector_origin_mode("learned")
 ```
 
-- [ ] **Step 2: Run the focused test and verify RED**
+- [x] **Step 2: Run the focused test and verify RED**
 
 Run: `python -m unittest tests.science.test_vector_origin -v`
 
 Expected: FAIL because `dfe.science.vector_origin` does not exist.
 
-- [ ] **Step 3: Implement the minimal pure helper**
+- [x] **Step 3: Implement the minimal pure helper**
 
 ```python
 from __future__ import annotations
@@ -130,13 +130,13 @@ def vector_embedding_positions(
     return compose_pos - origin
 ```
 
-- [ ] **Step 4: Run the focused tests and verify GREEN**
+- [x] **Step 4: Run the focused tests and verify GREEN**
 
 Run: `python -m unittest tests.science.test_vector_origin -v`
 
 Expected: all six tests PASS.
 
-- [ ] **Step 5: Commit the pure transformation**
+- [x] **Step 5: Commit the pure transformation**
 
 ```bash
 git add dfe/science/vector_origin.py tests/science/test_vector_origin.py
