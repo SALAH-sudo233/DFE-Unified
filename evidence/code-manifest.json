@@ -33,6 +33,8 @@
       "path": "evaluate_docking_fixed.py",
       "remote_mtime_epoch": 1787560880,
       "remote_path": "/workspace/ayb/Pocket2Mol/evaluate_docking_fixed.py",
+      "repository_sha256": "3e1b10e9573cb671ac4d647d851a231fbf7d0d5433a20867c0df2f87518433eb",
+      "repository_size": 15147,
       "sha256": "e73e1af5f7204e48268d7fac9b8ae48af0f2ab66635b36cb1b319dc4077e3568",
       "size": 15534
     },
@@ -40,6 +42,8 @@
       "path": "models/df_module.py",
       "remote_mtime_epoch": 1786893732,
       "remote_path": "/workspace/ayb/Pocket2Mol/models/df_module.py",
+      "repository_sha256": "40f18e65cde252a3d70018389800d109df8cf8551925706d32e479ba6d7c55d4",
+      "repository_size": 3767,
       "sha256": "37dfd5daa5ee4fbf271238a4a25779c0db823daac591ea737d9f594713cd3c9d",
       "size": 3247
     },
@@ -61,6 +65,8 @@
       "path": "models/maskfill.py",
       "remote_mtime_epoch": 1787305650,
       "remote_path": "/workspace/ayb/Pocket2Mol/models/maskfill.py",
+      "repository_sha256": "6a726a61fd2467da9f4f8b356587f4e63d4c519f01812942c091e6e44a62cb7a",
+      "repository_size": 29516,
       "sha256": "928197db8a358875d8c1376e0bfb982ea56bfd39ac3dee130dd590154042a8c8",
       "size": 27500
     },
@@ -82,6 +88,8 @@
       "path": "sample.py",
       "remote_mtime_epoch": 1787303535,
       "remote_path": "/workspace/ayb/Pocket2Mol/sample.py",
+      "repository_sha256": "e8b4c173531cac66490c0b81b2f1942192c1042608887725de6a2c6e29258913",
+      "repository_size": 12703,
       "sha256": "84df66a6563ea3493db2dbd2f68be5a9f3e36feb99e1e6022374963271b62cbe",
       "size": 13145
     },

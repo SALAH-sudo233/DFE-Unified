@@ -9,6 +9,7 @@ from .embedding import AtomEmbedding
 from .frontier import FrontierLayerVN
 from .position import PositionPredictor
 from .df_module import AnalyticalDirectionField
+from dfe.diagnostics.interventions import compute_df_with_diagnostics
 # from .debug import check_true_bonds_len, check_pred_bonds_len
 from utils.misc import unique
 
@@ -47,6 +48,18 @@ class MaskFillModelVN(Module):
         self.smooth_cross_entropy = SmoothCrossEntropyLoss(reduction='mean', smoothing=0.1)
         self.bceloss_with_logits = nn.BCEWithLogitsLoss()
 
+        object.__setattr__(self, '_diagnostic_intervention', None)
+        object.__setattr__(self, '_diagnostic_observer', None)
+
+    def set_diagnostics(self, intervention=None, observer=None):
+        """Set non-persistent inference diagnostics without changing model state."""
+        object.__setattr__(self, '_diagnostic_intervention', intervention)
+        object.__setattr__(self, '_diagnostic_observer', observer)
+
+    def _observe_tensor(self, event, value):
+        if self._diagnostic_observer is not None:
+            self._diagnostic_observer(event, value)
+
     def compute_df_features_all(self, compose_pos, compose_feature, idx_protein):
         if not hasattr(self, 'df_dim') or self.df_dim == 0:
             return None
@@ -57,8 +70,17 @@ class MaskFillModelVN(Module):
         else:
             protein_types = torch.zeros(len(protein_pos), dtype=torch.long, device=protein_pos.device)
         protein_mask = torch.ones(len(protein_pos), dtype=torch.bool, device=protein_pos.device)
-        df_emb = self.df_module(compose_pos, protein_pos, protein_types, protein_mask)
-        return self.df_proj(df_emb)
+        inputs = (compose_pos, protein_pos, protein_types, protein_mask)
+        if self._diagnostic_intervention is None and self._diagnostic_observer is None:
+            df_emb = self.df_module(*inputs)
+            return self.df_proj(df_emb)
+        return compute_df_with_diagnostics(
+            self.df_module,
+            self.df_proj,
+            inputs,
+            intervention=self._diagnostic_intervention,
+            observer=self._diagnostic_observer,
+        )
 
     def sample_init(self,
         compose_feature,
@@ -146,6 +168,8 @@ class MaskFillModelVN(Module):
         df_emb = self.compute_df_features_all(compose_pos, compose_feature, idx_protein)
         if df_emb is not None:
             h_compose = (h_compose[0] + df_emb, h_compose[1])
+        self._observe_tensor('encoder.scalar', h_compose[0])
+        self._observe_tensor('encoder.vector', h_compose[1])
         # # For the initial atom
         if len(idx_ligand) == 0:
             idx_ligand = idx_protein
@@ -156,6 +180,9 @@ class MaskFillModelVN(Module):
         )[:, 0]
         ind_frontier = (y_frontier_pred > frontier_threshold)
         has_frontier = torch.sum(ind_frontier) > 0
+        self._observe_tensor('frontier.logits', y_frontier_pred)
+        self._observe_tensor('frontier.indices', torch.nonzero(ind_frontier)[:, 0])
+        self._observe_tensor('termination.has_frontier', has_frontier.reshape(1))
         frontier_scale = 1
         if has_frontier:
             # # 2: sample focal from frontiers
@@ -198,6 +225,10 @@ class MaskFillModelVN(Module):
             idx_focal_in_compose,
             compose_pos,
         )
+        self._observe_tensor('position.relative_mu', relative_pos_mu)
+        self._observe_tensor('position.absolute_mu', abs_pos_mu)
+        self._observe_tensor('position.sigma', pos_sigma)
+        self._observe_tensor('position.pi', pos_pi)
         if n_samples < 0:
             pos_generated = self.pos_predictor.get_maximum(abs_pos_mu, pos_sigma, pos_pi,)  # n_focals, n_per_pos, 3
             n_candidate_samples = pos_generated.size(1)
@@ -233,6 +264,8 @@ class MaskFillModelVN(Module):
             ligand_bond_index = ligand_bond_index,
             ligand_bond_type = ligand_bond_type
         )
+        self._observe_tensor('element.logits', y_query_pred)
+        self._observe_tensor('bond.logits', edge_pred)
         if n_samples < 0:
             # raise NotImplementedError('The following is not fixed (and for/ bond)')
             has_atom_prob =  1 - 1 / (1 + torch.exp(y_query_pred).sum(-1))
@@ -247,6 +280,7 @@ class MaskFillModelVN(Module):
             element_pred = y_query_pred.multinomial(n_samples, replacement=True).reshape(-1)  # n_query * n_samples
             idx_parent = torch.repeat_interleave(torch.arange(n_query), n_samples, dim=0).to(compose_pos.device)
             element_prob = y_query_pred[idx_parent, element_pred]
+        self._observe_tensor('element.probability', y_query_pred)
         # # 5: determine bonds
         if n_samples < 0:
             all_edge_type = torch.argmax(edge_pred, dim=-1) # (num_generated, num_ligand_context)
@@ -275,6 +309,7 @@ class MaskFillModelVN(Module):
             ), dim=0)
             bond_type = all_edge_type[bond_index[0], bond_index[1]]
             bond_prob = edge_pred[idx_parent[bond_index[0]], bond_index[1], bond_type]
+        self._observe_tensor('bond.probability', F.softmax(edge_pred, dim=-1) if n_samples < 0 else edge_pred)
         
             
         return (element_pred, element_prob, has_atom_prob, idx_parent, # element
@@ -298,6 +333,7 @@ class MaskFillModelVN(Module):
             node_attr_compose = h_compose,
             edge_index_q_cps_knn = query_compose_knn_edge_index,
         )
+        self._observe_tensor('element.logits', y_query_pred)
         if n_samples < 0:
             # raise NotImplementedError('The following is not fixed')
             has_atom_prob =  1 - 1 / (1 + torch.exp(y_query_pred).sum(-1))
@@ -317,6 +353,8 @@ class MaskFillModelVN(Module):
             identifier, index_unique = unique(identifier, dim=0)
 
             element_pred, element_prob, has_atom_prob, idx_parent = element_pred[index_unique], element_prob[index_unique], has_atom_prob[index_unique], idx_parent[index_unique]
+
+        self._observe_tensor('element.probability', y_query_pred)
 
         return (element_pred, element_prob, has_atom_prob, idx_parent) # element
 

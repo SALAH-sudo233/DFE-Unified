@@ -852,7 +852,7 @@ Run fresh on the exact implementation commit and exact AIDD run manifest:
 ```bash
 python -m unittest discover -s tests -v
 python scripts/verify_repository.py
-python scripts/summarize_phase0.py --manifest /workspace/ayb/experiments/dfe-unified-phase0/phase0-df500k-v1/run-manifest.json --verify-only
+python scripts/summarize_phase0.py --manifest /workspace/ayb/experiments/dfe-unified-phase0/phase0-df500k-v1/run-manifest.json --stage main --verify-only
 python scripts/analyze_phase0.py --manifest /workspace/ayb/experiments/dfe-unified-phase0/phase0-df500k-v1/run-manifest.json --verify-only
 git status --short
 ```

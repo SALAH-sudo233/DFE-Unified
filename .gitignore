@@ -22,9 +22,16 @@ id_ed25519*
 .env
 .env.*
 
+# Project-local linked worktrees
+.worktrees/
+
+# Reproducible experiment outputs (manifests/configuration remain versioned)
+runs/
+diagnostic-runs/
+*.jsonl.tmp
+
 # Curated evidence is explicitly versioned.
 !artifacts/
 !artifacts/**
 !results/
 !results/**
-

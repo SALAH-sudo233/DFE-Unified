@@ -44,6 +44,9 @@ state-of-the-art performance or causal improvement over Pocket2Mol.
 - `evidence/` binds source, artifacts, and conclusions to machine-readable
   hashes and records the invalidated ADF/BIF experiment.
 - `docs/` explains architecture, limitations, and reproduction boundaries.
+- `dfe/diagnostics/` and `scripts/*phase0*` implement the create-only DF 500K
+  Phase 0 diagnostic protocol; the operator workflow is in
+  `docs/experiments/phase0-operator-runbook.md`.
 - `data/` records external dataset provenance; datasets are not redistributed.
 
 ## Verify the snapshot
@@ -60,6 +63,8 @@ when RDKit is installed.
 
 See `docs/methodology-limitations.md` before interpreting the metrics and
 `docs/reproduction.md` before attempting to resume training or sampling.
+New DF 500K diagnostics must follow the Phase 0 operator runbook and keep the
+500K checkpoint immutable.
 
 ## Upstream and license
 
