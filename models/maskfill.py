@@ -50,11 +50,16 @@ class MaskFillModelVN(Module):
 
         object.__setattr__(self, '_diagnostic_intervention', None)
         object.__setattr__(self, '_diagnostic_observer', None)
+        object.__setattr__(self, '_science_intervention', None)
 
     def set_diagnostics(self, intervention=None, observer=None):
         """Set non-persistent inference diagnostics without changing model state."""
         object.__setattr__(self, '_diagnostic_intervention', intervention)
         object.__setattr__(self, '_diagnostic_observer', observer)
+
+    def set_science_intervention(self, intervention=None):
+        """Install an explicit SCI-2A raw-feature intervention (inference only)."""
+        object.__setattr__(self, '_science_intervention', intervention)
 
     def _observe_tensor(self, event, value):
         if self._diagnostic_observer is not None:
@@ -71,6 +76,11 @@ class MaskFillModelVN(Module):
             protein_types = torch.zeros(len(protein_pos), dtype=torch.long, device=protein_pos.device)
         protein_mask = torch.ones(len(protein_pos), dtype=torch.bool, device=protein_pos.device)
         inputs = (compose_pos, protein_pos, protein_types, protein_mask)
+        if self._science_intervention is not None:
+            raw = self.df_module.raw_features(*inputs)
+            raw = self._science_intervention.apply(raw, seed=0)
+            df_emb = self.df_module.project_features(raw)
+            return self.df_proj(df_emb)
         if self._diagnostic_intervention is None and self._diagnostic_observer is None:
             df_emb = self.df_module(*inputs)
             return self.df_proj(df_emb)

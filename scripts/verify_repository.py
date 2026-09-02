@@ -197,6 +197,19 @@ def verify_phase0_sources() -> str:
     return f"schema={config.schema_version}, seeds={len(config.seeds)}"
 
 
+def verify_science_sources() -> str:
+    plan = ROOT / "docs" / "superpowers" / "plans" / "2026-09-02-sci1-se3-and-sci2a.md"
+    if not plan.is_file():
+        raise ValueError("missing SCI-1/SCI-2A implementation plan")
+    from dfe.science import SCIENCE_EXPERIMENT_IDS
+    from dfe.science.feature_interventions import INTERVENTIONS
+    if SCIENCE_EXPERIMENT_IDS != ("SCI-1-SE3-v1", "SCI-2A-FEATURE-v1"):
+        raise ValueError("unexpected science experiment IDs")
+    if len(INTERVENTIONS) != 8:
+        raise ValueError("SCI-2A intervention matrix must contain eight frozen arms")
+    return f"science_ids={len(SCIENCE_EXPERIMENT_IDS)}, feature_arms={len(INTERVENTIONS)}"
+
+
 def verify_no_tracked_run_artifacts(paths: Iterable[pathlib.Path]) -> None:
     run_names = {
         "run-manifest.json",
@@ -303,6 +316,7 @@ def main() -> int:
         ("source/artifact/result manifests", verify_manifests),
         ("partial evaluation scope", verify_results),
         ("Phase 0 sources", verify_phase0_sources),
+        ("SCI-1/SCI-2A sources", verify_science_sources),
         ("checkpoint structure", verify_checkpoint),
     ]
     try:
