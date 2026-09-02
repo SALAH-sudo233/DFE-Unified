@@ -28,6 +28,15 @@ class ModelPrecisionTests(unittest.TestCase):
         convert_index = source.index("model.to(device=device, dtype=torch_model_dtype(selected_dtype))")
         self.assertLess(load_index, convert_index)
 
+    def test_model_audit_converts_edge_features_to_selected_dtype(self):
+        source = (
+            Path(__file__).parents[2] / "scripts" / "run_se3_audit.py"
+        ).read_text(encoding="utf-8")
+        self.assertIn(
+            "compose_knn_edge_feature.to(\n                dtype=model_dtype",
+            source,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

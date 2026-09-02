@@ -302,7 +302,9 @@ def _run_model_state(runtime, base_data, positions: torch.Tensor, device: str):
             compose_pos=batch.compose_pos.to(dtype=model_dtype),
             idx_protein=batch.idx_protein_in_compose,
             compose_knn_edge_index=batch.compose_knn_edge_index,
-            compose_knn_edge_feature=batch.compose_knn_edge_feature,
+            compose_knn_edge_feature=batch.compose_knn_edge_feature.to(
+                dtype=model_dtype
+            ),
             n_samples_pos=-1,
             n_samples_atom=-1,
         )
