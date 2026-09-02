@@ -246,6 +246,29 @@ git commit -m "feat: run auditable sci2a feature interventions"
 
 After this plan is reviewed and implemented, stop before SCI-2B short training. Review `se3-audit.json` and the SCI-2A report first. Only a subsequent approved design delta may add invariant/vector DF candidates, width/depth sweeps, fixed-candidate DF+BIF ranking, or openness interaction analysis.
 
+## Stage gate and retry policy
+
+Every stage emits one of three non-ambiguous statuses through
+`dfe.science.gates.evaluate_gate`:
+
+- `pass`: evidence is complete and all preregistered thresholds pass; the next
+  stage may start.
+- `scientific_fail`: evidence is complete but a scientific threshold fails;
+  stop the stage, preserve its report, perform literature/code review and a
+  targeted fix or revised design, then create a new versioned run before retry.
+- `blocked`: required input, dependency, remote host, authentication, or
+  execution infrastructure is unavailable; repair that condition first and do
+  not interpret the result scientifically.
+
+The helper `retry_action(gate)` returns the required next action. A stage may
+not advance on `scientific_fail` or `blocked`, and retries must not overwrite
+the failed run root or alter seeds, denominators, thresholds, or checkpoint
+hashes.
+
+Current execution status: local implementation gates pass; real AIDD
+execution is `blocked` pending GitHub push/network recovery and valid `ssh
+aidd` authentication. No scientific conclusion is drawn from this block.
+
 Plan complete and saved to `docs/superpowers/plans/2026-09-02-sci1-se3-and-sci2a.md`. Two execution options:
 
 1. **Subagent-Driven (recommended):** dispatch a fresh subagent per task with review checkpoints.
