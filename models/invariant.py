@@ -21,7 +21,9 @@ class MessageModule(Module):
         self.e2n_linear = Linear(hid_sca, out_vec)
         self.n2e_linear = Linear(out_sca, out_vec)
         # A coordinate-wise bias is not a valid SO(3)-equivariant vector map.
-        self.edge_vnlinear = VNLinear(hid_vec, out_vec, bias=False)
+        # Keep the frozen checkpoint bias key, but do not apply a coordinate-wise
+        # bias in the vector map because it violates SO(3) equivariance.
+        self.edge_vnlinear = VNLinear(hid_vec, out_vec, bias=True, apply_bias=False)
 
         self.out_gvlienar = GVLinear(out_sca, out_vec, out_sca, out_vec)
 
@@ -84,15 +86,18 @@ class GVLinear(Module):
 
 
 class VNLinear(nn.Module):
-    def __init__(self, in_channels, out_channels, *args, **kwargs):
+    def __init__(self, in_channels, out_channels, *args, apply_bias=True, **kwargs):
         super(VNLinear, self).__init__()
+        self.apply_bias = apply_bias
         self.map_to_feat = nn.Linear(in_channels, out_channels, *args, **kwargs)
     
     def forward(self, x):
         '''
         x: point features of shape [B, N_samples, N_feat, 3]
         '''
-        x_out = self.map_to_feat(x.transpose(-2,-1)).transpose(-2,-1)
+        x_in = x.transpose(-2, -1)
+        bias = self.map_to_feat.bias if self.apply_bias else None
+        x_out = F.linear(x_in, self.map_to_feat.weight, bias).transpose(-2, -1)
         return x_out
 
 

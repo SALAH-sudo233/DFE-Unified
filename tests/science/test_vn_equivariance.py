@@ -15,7 +15,10 @@ else:
 class VNSourceContractTests(unittest.TestCase):
     def test_message_edge_vector_projection_has_no_coordinate_bias(self):
         source = (Path(__file__).parents[2] / "models" / "invariant.py").read_text(encoding="utf-8")
-        self.assertIn("self.edge_vnlinear = VNLinear(hid_vec, out_vec, bias=False)", source)
+        self.assertIn(
+            "self.edge_vnlinear = VNLinear(hid_vec, out_vec, bias=True, apply_bias=False)",
+            source,
+        )
 
 
 @unittest.skipIf(torch is None, f"VN tests require the model dependency stack: {_IMPORT_ERROR}")
