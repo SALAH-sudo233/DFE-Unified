@@ -1,0 +1,10 @@
+model:
+    checkpoint: /workspace/ayb/experiments/dfe-unified-arm-a/armb_i3_run/checkpoints/25000.pt
+    type: df
+    params: {hidden_size: 256, vec_hidden_size: 64, df_dim: 64, n_interaction: 6}
+sample:
+  seed: 42
+  num_samples: 100
+  beam_size: 300
+  max_steps: 100
+  threshold: {focal_threshold: 0.5, pos_threshold: 0.25, element_threshold: 0.3, hasatom_threshold: 0.6, bond_threshold: 0.4}
