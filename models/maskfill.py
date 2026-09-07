@@ -74,11 +74,12 @@ class MaskFillModelVN(Module):
             normalize_vector_origin_mode(mode),
         )
 
-    def _embed_compose(self, compose_feature, compose_pos, idx_ligand, idx_protein):
+    def _embed_compose(self, compose_feature, compose_pos, idx_ligand, idx_protein, compose_batch=None):
         embedding_pos = vector_embedding_positions(
             compose_pos,
             idx_protein,
             self._science_vector_origin,
+            compose_batch=compose_batch,
         )
         return embed_compose(
             compose_feature,
@@ -408,7 +409,8 @@ class MaskFillModelVN(Module):
                           y_frontier,  # frontier labels
                           idx_focal,  pos_generate,  # focal and generated positions  #NOTE: idx are in comopse
                           idx_protein_all_mask, y_protein_frontier,  # surface of protein
-                          compose_knn_edge_index, compose_knn_edge_feature, real_compose_knn_edge_index,  fake_compose_knn_edge_index  # edges in compose, query-compose
+                          compose_knn_edge_index, compose_knn_edge_feature, real_compose_knn_edge_index, fake_compose_knn_edge_index,
+                          compose_batch=None,  # optional PyG graph ids for per-pocket centering
         ):
 
         # # emebedding
@@ -417,6 +419,7 @@ class MaskFillModelVN(Module):
             compose_pos,
             idx_ligand,
             idx_protein,
+            compose_batch=compose_batch,
         )
         # # Encode compose
         h_compose = self.encoder(
