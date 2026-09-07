@@ -75,6 +75,14 @@ if __name__ == '__main__':
     parser.add_argument('--config', type=str, default='./configs/sample_for_pdb.yml')
     parser.add_argument('--device', type=str, default='cuda')
     parser.add_argument('--outdir', type=str, default='./outputs')
+    parser.add_argument('--vector-origin-mode', dest='vector_origin_mode',
+                        type=str, default='absolute',
+                        choices=('absolute', 'centered', 'zero'),
+                        help='SCI-1 atom-vector origin (I3 uses zero).')
+    parser.add_argument('--model-dtype', dest='model_dtype',
+                        type=str, default='float32',
+                        choices=('float32', 'float64'),
+                        help='Inference precision (production=float32).')
     args = parser.parse_args()
 
     # Load configs
@@ -121,6 +129,12 @@ if __name__ == '__main__':
         num_bond_types = 3,
     ).to(args.device)
     model.load_state_dict(ckpt['model'])
+    # SCI-1/I3: select non-persistent vector-origin (weights unchanged).
+    model.set_science_vector_origin(args.vector_origin_mode)
+    if getattr(args, 'model_dtype', 'float32') == 'float64':
+        model = model.double()
+    logger.info('Science config: vector_origin=%s model_dtype=%s' % (
+        args.vector_origin_mode, getattr(args, 'model_dtype', 'float32')))
 
     # Sampling
     # The algorithm is the same as the one `sample.py`.

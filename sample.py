@@ -166,6 +166,13 @@ if __name__ == '__main__':
     parser.add_argument('--outdir', type=str, default='./outputs')
     parser.add_argument('--device', type=str, default='cuda')
     parser.add_argument('-i', '--data_id', type=str, default='0')
+    parser.add_argument('--vector-origin-mode', dest='vector_origin_mode',
+                        type=str, default='absolute',
+                        choices=('absolute', 'centered', 'zero'),
+                        help='SCI-1 atom-vector origin (I3 uses zero).')
+    parser.add_argument('--model-dtype', dest='model_dtype',
+                        type=str, default='float32',
+                        choices=('float32', 'float64'))
     args = parser.parse_args()
 
     # check existing in output dir
@@ -229,6 +236,12 @@ if __name__ == '__main__':
         num_bond_types = 3,
     ).to(args.device)
     model.load_state_dict(ckpt['model'])
+    # SCI-1/I3: non-persistent vector-origin selection (weights unchanged).
+    model.set_science_vector_origin(args.vector_origin_mode)
+    if getattr(args, 'model_dtype', 'float32') == 'float64':
+        model = model.double()
+    logger.info('Science config: vector_origin=%s model_dtype=%s' % (
+        args.vector_origin_mode, getattr(args, 'model_dtype', 'float32')))
 
     pool = EasyDict({
         'queue': [],
@@ -324,8 +337,20 @@ if __name__ == '__main__':
 
             queue_tmp += nexts
         # # random choose mols from candidates
-        prob = logp_to_rank_prob(np.array([p.average_logp[2:] for p in queue_tmp]),)  # (logp_focal, logpdf_pos), logp_element, logp_hasatom, logp_bond
         n_tmp = len(queue_tmp)
+        if n_tmp == 0:
+            logger.info("All candidates finished or failed. Stopping sampling.")
+            break
+        prob = logp_to_rank_prob(np.array([p.average_logp[2:] for p in queue_tmp]),)  # (logp_focal, logpdf_pos), logp_element, logp_hasatom, logp_bond
+        prob = np.asarray(prob, dtype=np.float64).reshape(-1)
+        prob = np.nan_to_num(prob, nan=0.0, posinf=1.0, neginf=0.0)
+        prob = np.maximum(prob, 0)
+        if prob.shape[0] != n_tmp or prob.sum() <= 0:
+            prob = np.ones(n_tmp) / n_tmp
+        else:
+            prob = prob / prob.sum()
+            if len(prob) > 1:
+                prob[-1] = 1.0 - prob[:-1].sum()
         next_idx = np.random.choice(np.arange(n_tmp), p=prob, size=min(config.sample.beam_size, n_tmp), replace=False)
         pool.queue = [queue_tmp[idx] for idx in next_idx]
 
