@@ -6,6 +6,7 @@ from math import pi as PI
 
 from ..common import GaussianSmearing, EdgeExpansion
 from ..invariant import GVLinear, GVPerceptronVN, MessageModule
+from .interaction_residual import InteractionResidual
 
 class SpatialClassifierVN(Module):
 
@@ -102,7 +103,7 @@ class SpatialClassifierVN(Module):
 
 class AttentionEdges(Module):
 
-    def __init__(self, hidden_channels, key_channels, num_heads=1, num_bond_types=3, ablation=None):
+    def __init__(self, hidden_channels, key_channels, num_heads=1, num_bond_types=3, ablation=None, interaction_dim=0):
         super().__init__()
         
         assert (hidden_channels[0] % num_heads == 0) and (hidden_channels[1] % num_heads == 0)
@@ -112,6 +113,8 @@ class AttentionEdges(Module):
         self.key_channels = key_channels
         self.num_heads = num_heads
         self.ablation = ablation  # None, 'no_vec_attn', or 'no_tri_bias'
+        self.interaction_dim = interaction_dim
+        self.interaction_residual = InteractionResidual(interaction_dim, hidden_channels[0], num_heads) if interaction_dim else None
 
         # linear transformation for attention 
         self.q_lin = GVLinear(hidden_channels[0], hidden_channels[1], key_channels[0], key_channels[1])
@@ -181,6 +184,11 @@ class AttentionEdges(Module):
             atten_bias[0] + qk_ij[0],
             atten_bias[1] + qk_ij[1]
         ]
+        if self.interaction_residual is not None:
+            # Optional protein-conditioned scalar residual; caller supplies pair features.
+            interaction_features = tri_edge_feat[:, :self.interaction_dim]
+            alpha[0] = alpha[0] + self.interaction_residual(interaction_features)
+            alpha[1] = alpha[1] + self.interaction_residual(interaction_features)
         alpha = [
             scatter_softmax(alpha[0], index_edge_i_list, dim=0),  # (N', heads)
             scatter_softmax(alpha[1], index_edge_i_list, dim=0)  # (N', heads)
