@@ -1,0 +1,80 @@
+{
+  "description": "Registry of large binary artifacts that are NOT committed to the repository (checkpoints, embeddings, feature dumps, sequence files). They remain on the aidd server under the ayb workspace. Each record binds the retained bytes by SHA-256 so that experiment records committed here can be traced to their exact source artifact. Paths are provenance references, not redistributed data.",
+  "server": "aidd (ayb workspace)",
+  "generated": "2026-09-15",
+  "policy": "Small text records (metrics/manifests/splits) and code are versioned in experiments/. Binaries below are registered by hash only.",
+  "artifacts": [
+    {
+      "role": "C-line shared-representation: 256-d complex embeddings (frozen i3 encoder over 5316 PDBBind-refined complexes)",
+      "remote_path": "/workspace/ayb/experiments/dfe-unified-p3/embeddings_shared.pt",
+      "size": 13959959,
+      "sha256": "33e665be96dc3fee2ca2f096447bffec7166db84b739f5eb3d0c221b4a25043a"
+    },
+    {
+      "role": "C-line ScreeningHead trained weights (full arm)",
+      "remote_path": "/workspace/ayb/experiments/dfe-unified-p3/screeninghead_full.pt",
+      "size": 665191,
+      "sha256": "b52b4852c488562aeec35e49d8461bbde6a258dc5e3995b3ad06af6859759daa"
+    },
+    {
+      "role": "PDBBind-refined sequences (FASTA) used for identity clustering",
+      "remote_path": "/workspace/ayb/experiments/dfe-unified-p3/refined_seqs.fasta",
+      "size": 2314865,
+      "sha256": "16e1f6ec579b4da86b088430684b0b38cffcc506b731d44d7aa949ee98ffbf74"
+    },
+    {
+      "role": "PDBBind-refined pKd/Ki affinity labels",
+      "remote_path": "/workspace/ayb/experiments/dfe-unified-p3/refined_labels.json",
+      "size": 238355,
+      "sha256": "4814ca65025af79bd3c6ee9003ecf9c8a166f2ab23fd6c9828f5a61b5e9be605"
+    },
+    {
+      "role": "30% identity single-linkage clusters (1324 clusters)",
+      "remote_path": "/workspace/ayb/experiments/dfe-unified-p3/refined_clusters.json",
+      "size": 69668,
+      "sha256": "99429dfb5b847c53e000928886286aae04aa504642f3291651f26fb3a2f4967b"
+    },
+    {
+      "role": "Geometry probe cross-molecule element-pair distance histogram features (jsonl)",
+      "remote_path": "/workspace/ayb/experiments/dfe-unified-p3/geometry_probe/geometry_features.jsonl",
+      "size": 8315051,
+      "sha256": "201d3d86e0b30b2f0c8f56b84ddf3abac1dabc46621d58d9c79e23f4da969e7a"
+    },
+    {
+      "role": "Causal control v2 test predictions (npz)",
+      "remote_path": "/workspace/ayb/experiments/dfe-unified-p3/geometry_probe/causal_control_v2/predictions.npz",
+      "size": 11627,
+      "sha256": "5994dacb4abd669cc22b98162639a542e4820b247de36fed63c200183ff027e4"
+    },
+    {
+      "role": "Causal control v2 within-split cluster-disjoint permutation map",
+      "remote_path": "/workspace/ayb/experiments/dfe-unified-p3/geometry_probe/causal_control_v2/permutation.json",
+      "size": 95690,
+      "sha256": "f464d1e66755297d8a390be0df9da66906f8ac46ebd6b5fafab2f753ea03d205"
+    },
+    {
+      "role": "Track A 530k-continuation intermediate checkpoint (regressed vs DF-500k; do not reuse as start)",
+      "remote_path": "/workspace/ayb/experiments/dfe-unified-trackA/ft_df500k/checkpoints/528000.pt",
+      "size": 45325467,
+      "sha256": "24feaac3f5149c9ceeb5dfc3ec497047a10c8cbfd4ee9cb65e415bc6f86d39b6"
+    },
+    {
+      "role": "Track A 530k-continuation checkpoint (regressed vs DF-500k baseline)",
+      "remote_path": "/workspace/ayb/experiments/dfe-unified-trackA/ft_df500k/checkpoints/530000.pt",
+      "size": 45325467,
+      "sha256": "0592839886af1aa5efceb00841353ad6b4724eba7be41714f6530b3f51fd138b"
+    },
+    {
+      "role": "Track A conservative head-only fine-tune (Plan A) 5000-step checkpoint",
+      "remote_path": "/workspace/ayb/experiments/dfe-unified-trackA/conservative_ft_5k/formal_run/train_2026_09_14__01_01_36/checkpoints/5000.pt",
+      "size": 21212086,
+      "sha256": "b5aad79acdded0690d20fa1dd7baa3f37a87f9a1b39d87ed66c1394bd30d32bb"
+    },
+    {
+      "role": "Frozen best generation baseline: Arm B I3 zero-origin fine-tune, 25000 steps",
+      "remote_path": "/workspace/ayb/experiments/dfe-unified-arm-a/armb_i3_run/checkpoints/25000.pt",
+      "size": 45250497,
+      "sha256": "bf06965b5b31220392e800edd74466cd1901da9bbcbaa818cbec57c3f6574404"
+    }
+  ]
+}

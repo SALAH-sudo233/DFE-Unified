@@ -1,0 +1,21 @@
+{
+  "protocol": "geometry histogram affinity regression; frozen generator; no sensitivity analysis",
+  "metrics": {
+    "val_pearson": 0.6632424723755193,
+    "test_pearson": 0.3604804083800797,
+    "test_rmse": 2.2105090618133545,
+    "n_train": 4049,
+    "n_val": 444,
+    "n_test": 823,
+    "best_epoch": 136
+  },
+  "splits": {
+    "train": 4049,
+    "val": 444,
+    "test": 823
+  },
+  "feature_dim": 817,
+  "fallback_rows_included": 676,
+  "checkpoint_reload_exact": true,
+  "seed": 20260915
+}

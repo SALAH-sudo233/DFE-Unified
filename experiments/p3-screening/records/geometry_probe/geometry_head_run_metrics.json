@@ -1,0 +1,31 @@
+{
+  "protocol": "PDBBind refined atom-pair element-distance histogram",
+  "feature_dim": 0,
+  "results": {
+    "real": {
+      "val_pearson": 0.0,
+      "test_pearson": 0.0,
+      "test_rmse": NaN,
+      "n_train": 0,
+      "n_val": 0,
+      "n_test": 0
+    },
+    "pocket_geometry_permutation_test": {
+      "val_pearson": 0.0,
+      "test_pearson": 0.0,
+      "test_rmse": NaN,
+      "n_train": 0,
+      "n_val": 0,
+      "n_test": 0
+    }
+  },
+  "fallback_recovery_included": true,
+  "n_rows": 0,
+  "splits": {
+    "train": 0,
+    "val": 0,
+    "test": 0
+  },
+  "seed": 20260915,
+  "note": "This is a frozen geometry probe, not generator joint fine-tuning and not a CrossDocked SOTA score."
+}

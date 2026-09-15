@@ -1,0 +1,21 @@
+FF
+======================================================================
+FAIL: test_each_atom_pair_counted_once (__main__.OriginalRegression)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/ayb/experiments/dfe-unified-p3/geometry_repair_v3/test_original.py", line 11, in test_each_atom_pair_counted_once
+    self.assertEqual(sum(scope['vals']),2,'Each real atom pair must contribute once')
+AssertionError: 4 != 2 : Each real atom pair must contribute once
+
+======================================================================
+FAIL: test_split_join (__main__.OriginalRegression)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/workspace/ayb/experiments/dfe-unified-p3/geometry_repair_v3/test_original.py", line 20, in test_split_join
+    self.assertEqual(old.get('10gs'),next(s for s,cs in sp['split'].items() if '10gs' in cs))
+AssertionError: None != 'test'
+
+----------------------------------------------------------------------
+Ran 2 tests in 0.003s
+
+FAILED (failures=2)

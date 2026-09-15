@@ -1,0 +1,8 @@
+{
+  "files": {
+    "500k": "/workspace/ayb/Pocket2Mol/logs/checkpoints/500000.pt",
+    "528k": "/workspace/ayb/experiments/dfe-unified-trackA/ft_df500k/checkpoints/528000.pt",
+    "530k": "/workspace/ayb/experiments/dfe-unified-trackA/ft_df500k/checkpoints/530000.pt"
+  },
+  "groups": {}
+}

@@ -1,0 +1,23 @@
+{
+  "version": 3,
+  "n_valid": 5316,
+  "n_bad": 0,
+  "bad_counts": {},
+  "splits": {
+    "train": 4049,
+    "val": 444,
+    "test": 823
+  },
+  "root": "/workspace/ayb/data/pdbbind/v2020",
+  "bins": [
+    0,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8,
+    10,
+    "inf"
+  ]
+}

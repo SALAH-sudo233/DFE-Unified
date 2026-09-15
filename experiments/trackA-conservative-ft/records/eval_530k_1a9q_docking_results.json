@@ -1,0 +1,51 @@
+[
+  {
+    "smiles": "OC[C@H]1CO[C@H]2CCCC[C@H]2O1",
+    "valid": true,
+    "qed": 0.6326273787869223,
+    "mw": 172.224,
+    "logp": 0.7053,
+    "num_hba": 3,
+    "num_hbd": 1,
+    "lipinski_violations": 0,
+    "num_rings": 2,
+    "num_atoms": 12,
+    "docking_score": -6.233,
+    "all_scores": [
+      -6.233,
+      -6.231,
+      -6.145,
+      -5.921,
+      -5.807
+    ],
+    "docked_pose": "/tmp/tmp3zfo8a5e_docked.pdbqt",
+    "posebuster": {
+      "passed": true,
+      "details": {
+        "mol_pred_loaded": true,
+        "mol_cond_loaded": true,
+        "sanitization": true,
+        "inchi_convertible": true,
+        "all_atoms_connected": true,
+        "bond_lengths": true,
+        "bond_angles": true,
+        "internal_steric_clash": true,
+        "aromatic_ring_flatness": true,
+        "non-aromatic_ring_non-flatness": true,
+        "double_bond_flatness": true,
+        "internal_energy": true,
+        "protein-ligand_maximum_distance": true,
+        "minimum_distance_to_protein": true,
+        "minimum_distance_to_organic_cofactors": true,
+        "minimum_distance_to_inorganic_cofactors": true,
+        "minimum_distance_to_waters": true,
+        "volume_overlap_with_protein": true,
+        "volume_overlap_with_organic_cofactors": true,
+        "volume_overlap_with_inorganic_cofactors": true,
+        "volume_overlap_with_waters": true
+      },
+      "num_fragments": 1
+    },
+    "mol_index": 0
+  }
+]

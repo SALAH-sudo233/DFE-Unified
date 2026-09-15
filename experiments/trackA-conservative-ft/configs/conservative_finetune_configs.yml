@@ -1,0 +1,53 @@
+# Conservative fine-tune configuration drafts
+# These are drafts only; do not execute directly with train_resume.py.
+
+A:
+  checkpoint: /workspace/ayb/Pocket2Mol/logs/checkpoints/500000.pt
+  max_iters: 505000
+  lr: 1.0e-5
+  batch_size: 8
+  trainable: [frontier_pred, field.classifier, field.edge_pred, pos_predictor]
+  reset_optimizer: true
+  scheduler: none
+  max_grad_norm: 1.0
+
+B:
+  checkpoint: /workspace/ayb/Pocket2Mol/logs/checkpoints/500000.pt
+  max_iters: 510000
+  lr: 1.0e-5
+  batch_size: 8
+  trainable: [frontier_pred, field.classifier, field.edge_pred, pos_predictor]
+  reset_optimizer: true
+  scheduler: none
+  max_grad_norm: 1.0
+
+C:
+  checkpoint: /workspace/ayb/Pocket2Mol/logs/checkpoints/500000.pt
+  max_iters: 520000
+  lr: 1.0e-5
+  batch_size: 8
+  freeze: [encoder.interactions.0, encoder.interactions.1, encoder.interactions.2, encoder.interactions.3]
+  reset_optimizer: true
+  scheduler: none
+  max_grad_norm: 1.0
+
+D:
+  checkpoint: /workspace/ayb/Pocket2Mol/logs/checkpoints/500000.pt
+  max_iters: 530000
+  lr: 5.0e-6
+  batch_size: 8
+  trainable: all
+  reset_optimizer: true
+  scheduler: none
+  max_grad_norm: 1.0
+
+E:
+  checkpoint: /workspace/ayb/Pocket2Mol/logs/checkpoints/500000.pt
+  max_iters: 515000
+  lr: 1.0e-5
+  batch_size: 8
+  freeze: [encoder.interactions.0, encoder.interactions.1, encoder.interactions.2, encoder.interactions.3]
+  replay_ratio: 0.5
+  reset_optimizer: true
+  scheduler: none
+  max_grad_norm: 1.0

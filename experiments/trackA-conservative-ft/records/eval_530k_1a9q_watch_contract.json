@@ -1,0 +1,8 @@
+{
+  "pid": 2676287,
+  "proc_start_ticks": "30883070",
+  "deadline_epoch": 1789011801.918426,
+  "timeout_action": "SIGINT, then SIGTERM after 60s if same process",
+  "model": "530000.pt",
+  "scope": "/workspace/ayb/experiments/dfe-unified-trackA/eval_530k_1a9q/sample_530k.yml"
+}

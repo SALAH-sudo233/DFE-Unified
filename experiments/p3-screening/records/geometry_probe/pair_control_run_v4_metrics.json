@@ -1,0 +1,22 @@
+{
+  "protocol": "pair geometry histogram frozen probe",
+  "n": {
+    "train": 4049,
+    "val": 444,
+    "test": 823
+  },
+  "feature_dim": 4609,
+  "real": {
+    "val_pearson": 0.6463894649547128,
+    "test_pearson": 0.37805696186472554,
+    "test_rmse": 2.1928117275238037
+  },
+  "within_split_pair_permutation": {
+    "val_pearson": 0.04727511355627068,
+    "test_pearson": 0.0029309161045816645,
+    "test_rmse": 2.50091552734375
+  },
+  "delta_real_minus_shuffle": 0.37512604576014386,
+  "fallback_rows_included": 676,
+  "seed": 20260915
+}

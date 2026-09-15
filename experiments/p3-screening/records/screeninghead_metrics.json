@@ -1,0 +1,79 @@
+{
+  "controls": {
+    "full": {
+      "pearson": 0.6479786038398743,
+      "spearman": 0.6408147215843201
+    },
+    "ligand_only": {
+      "pearson": 0.6276456713676453,
+      "spearman": 0.6401702761650085
+    },
+    "pocket_only": {
+      "pearson": 0.6306399703025818,
+      "spearman": 0.6367810368537903
+    },
+    "label_permutation": {
+      "pearson": 0.11689718812704086,
+      "spearman": 0.09131142497062683
+    },
+    "pocket_shuffle": {
+      "pearson": 0.6109528541564941,
+      "spearman": 0.6139184236526489
+    }
+  },
+  "detail": {
+    "full": {
+      "test_pearson": 0.6479786038398743,
+      "test_spearman": 0.6408147215843201,
+      "test_rmse": 1.6369565725326538,
+      "val_pearson": 0.7440413236618042,
+      "best_epoch": 7
+    },
+    "ligand_only": {
+      "test_pearson": 0.6276456713676453,
+      "test_spearman": 0.6401702761650085,
+      "test_rmse": 1.7569851875305176
+    },
+    "pocket_only": {
+      "test_pearson": 0.6306399703025818,
+      "test_spearman": 0.6367810368537903,
+      "test_rmse": 1.708329200744629
+    },
+    "label_permutation": {
+      "test_pearson": 0.11689718812704086,
+      "test_spearman": 0.09131142497062683,
+      "test_rmse": 2.4524381160736084
+    },
+    "pocket_shuffle": {
+      "test_pearson": 0.6109528541564941,
+      "test_spearman": 0.6139184236526489,
+      "test_rmse": 1.8128855228424072
+    }
+  },
+  "eval_pocket_enrichment": {
+    "pooled_test": {
+      "n": 823,
+      "n_active": 206,
+      "EF1pct": 1.9975728155339805,
+      "EF5pct": 1.4616386455126686,
+      "BEDROC20": 0.40174357425670026
+    },
+    "eval_pockets_in_test": [
+      "1fm9",
+      "1a1e",
+      "1a9q",
+      "3ebp",
+      "1sgu"
+    ],
+    "note": "Each of the 5 eval pockets is a single complex in test (one ligand each), so per-target virtual-screening EF/BEDROC over a ligand library is not computable from PDBBind-refined labels alone. Reported pooled EF/BEDROC over the 823-complex test set using top-25% pk as actives, ranked by ScreeningHead predicted pk."
+  },
+  "test_pearson": 0.6479786038398743,
+  "test_spearman": 0.6408147215843201,
+  "test_rmse": 1.6369565725326538,
+  "n_usable": {
+    "train": 4047,
+    "val": 443,
+    "test": 823
+  },
+  "seed": 20260908
+}

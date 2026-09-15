@@ -10,6 +10,7 @@
 | Per-pocket raw records | `../results/df-500k-21-pocket/per-pocket/` | SDF, SMILES, and docking/PoseBusters records |
 | Dataset observation | `../data/crossdocked-manifest.json` | External input sizes and split hash without redistribution |
 | Invalidated ADF/BIF experiment | `invalidated-experiments/adf-bif-400k.md` | Why the experiment is excluded from valid model evidence |
+| Large-artifact registry (Sept experiments) | `large-artifacts-registry.json` | SHA-256 binding for uncommitted checkpoints, embeddings, feature dumps, and sequence/label files that back `../experiments/` records |
 
 Manifests are generated deterministically by `scripts/generate_manifests.py`.
 `scripts/verify_repository.py` performs the repository-level integrity and

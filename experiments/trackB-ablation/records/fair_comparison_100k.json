@@ -1,0 +1,54 @@
+{
+  "test_df_375k_1a9q": {
+    "total": 22,
+    "valid_count": 22,
+    "validity": 1.0,
+    "unique_count": 22,
+    "uniqueness": 1.0,
+    "diversity": 0.8177,
+    "qed_mean": 0.5198,
+    "mw_mean": 294.38,
+    "docking_mean": -7.949,
+    "docking_best": -9.575,
+    "docking_success_rate": 0.8182
+  },
+  "test_a0_100k_1a9q_v2": {
+    "total": 27,
+    "valid_count": 27,
+    "validity": 1.0,
+    "unique_count": 27,
+    "uniqueness": 1.0,
+    "diversity": 0.7857,
+    "qed_mean": 0.5793,
+    "mw_mean": 208.57,
+    "docking_mean": -7.274,
+    "docking_best": -8.452,
+    "docking_success_rate": 0.6667
+  },
+  "test_a3_100k_1a9q": {
+    "total": 23,
+    "valid_count": 23,
+    "validity": 1.0,
+    "unique_count": 23,
+    "uniqueness": 1.0,
+    "diversity": 0.8148,
+    "qed_mean": 0.4522,
+    "mw_mean": 207.78,
+    "docking_mean": -6.986,
+    "docking_best": -7.865,
+    "docking_success_rate": 0.6087
+  },
+  "test_a4_100k_1a9q": {
+    "total": 28,
+    "valid_count": 28,
+    "validity": 1.0,
+    "unique_count": 28,
+    "uniqueness": 1.0,
+    "diversity": 0.851,
+    "qed_mean": 0.542,
+    "mw_mean": 203.19,
+    "docking_mean": -6.766,
+    "docking_best": -7.919,
+    "docking_success_rate": 0.3929
+  }
+}

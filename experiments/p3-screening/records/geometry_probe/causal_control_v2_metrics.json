@@ -1,0 +1,78 @@
+{
+  "protocol": "causal pair-control v1; raw atom geometry; restricted within-split cluster-disjoint pocket permutation; no joint generator FT",
+  "feature_definition": {
+    "ligand_marginal_dim": 48,
+    "pocket_marginal_dim": 12,
+    "pair_geometry_dim": 1152,
+    "total_dim": 1212,
+    "distance_bins": [
+      0,
+      2,
+      3,
+      4,
+      5,
+      6,
+      8,
+      10,
+      "inf"
+    ]
+  },
+  "results": {
+    "full": {
+      "mode": "full",
+      "val_pearson": 0.6047744529399555,
+      "test_pearson": 0.3195458004861446,
+      "test_rmse": 2.291658878326416,
+      "best_epoch": 12,
+      "n_train": 4049,
+      "n_val": 444,
+      "n_test": 823
+    },
+    "permuted": {
+      "mode": "permuted",
+      "val_pearson": 0.183629601505047,
+      "test_pearson": 0.22404941397523503,
+      "test_rmse": 2.37839412689209,
+      "best_epoch": 20,
+      "n_train": 4049,
+      "n_val": 444,
+      "n_test": 823
+    },
+    "ligand_only": {
+      "mode": "ligand_only",
+      "val_pearson": 0.4565513581647621,
+      "test_pearson": 0.5104936932757781,
+      "test_rmse": 2.051558017730713,
+      "best_epoch": 186,
+      "n_train": 4049,
+      "n_val": 444,
+      "n_test": 823
+    },
+    "pocket_only": {
+      "mode": "pocket_only",
+      "val_pearson": 0.2573780247738965,
+      "test_pearson": 0.10134618971991897,
+      "test_rmse": 2.4300076961517334,
+      "best_epoch": 27,
+      "n_train": 4049,
+      "n_val": 444,
+      "n_test": 823
+    }
+  },
+  "deltas": {
+    "full_minus_permuted_test_pearson": 0.09549638651090958,
+    "full_minus_ligand_only_test_pearson": -0.19094789278963348,
+    "full_minus_pocket_only_test_pearson": 0.21819961076622563
+  },
+  "permutation_checks": {
+    "identity_count": 0,
+    "cross_split_count": 0,
+    "same_cluster_count": 0,
+    "n_permuted": 5316
+  },
+  "valid_codes": 5316,
+  "parse_failures": [],
+  "fallback_all_included": true,
+  "seed": 20260915,
+  "note": "The permutation control preserves ligand identity, split, and a restricted pocket marginal permutation; effect is descriptive intervention evidence, not a full causal claim."
+}
