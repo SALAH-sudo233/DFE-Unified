@@ -82,10 +82,65 @@ pocket_only AUC            < 0.65     (nor by pocket alone)
 clash-free fraction in 0.05–0.95      (both classes present)
 ```
 
-Status: extraction over all 93 pockets (~10k DF-500k molecules) running; features
-stored per molecule with ligand-only and pocket-only descriptor blocks kept separate
-so the ablation is exact. Output:
-`/workspace/ayb/experiments/dfe-unified-cd100/interaction_critic_gate/`
+### Gate result: FAILED, twice. The critic is cancelled.
+
+Measured on all 93 pockets / 10032 DF-500k molecules.
+
+**Locked gate (molecule-level holdout):**
+
+| criterion | measured | required | |
+|---|---:|---|:--:|
+| ligand_only AUC | 0.569 | < 0.65 | pass |
+| pocket_only AUC | 0.671 | < 0.65 | **fail** |
+| \|corr(clash, heavy_atoms)\| | 0.077 | < 0.5 | pass |
+| clash-free fraction | 0.507 | 0.05–0.95 | pass |
+
+Criterion 2 as locked was mis-specified: pocket difficulty is a legitimate prior, not
+cheating, so the question should have been whether pair-aware features add increment
+*over* that prior. The result is reported under the original gate first
+(`GATE_PASS=false`), and the redesign argued separately — the threshold was not
+restated to change the verdict.
+
+**Revised gate — pair increment, pocket-grouped holdout (no pocket in both splits),
+3 seeds:**
+
+| feature block | AUC | ±sd |
+|---|---:|---:|
+| ligand_only | 0.520 | 0.038 |
+| pocket_only | 0.641 | 0.015 |
+| lig+pocket | **0.636** | 0.030 |
+| coarse_pair_only | 0.538 | 0.016 |
+| lig+pocket+coarse_pair | **0.620** | 0.040 |
+| + borderline burial8 | 0.622 | 0.023 |
+
+Required `delta >= +0.10` over the strongest marginal baseline. Measured
+**`delta = -0.0166`** — coarse pair placement adds nothing and is marginally harmful.
+`PAIR_GATE_PASS=false`.
+
+Coarse pair features were restricted to aggregate placement (ligand centroid to pocket
+centroid distance, projections on pocket principal axes, fraction of ligand atoms
+outside the pocket 90th-percentile envelope, Rg ratio) and deliberately exclude
+`min_dist` / `worst_overlap` / `n_clash`, which define the label. An 8 A burial count is
+borderline (far beyond vdW contact ~3.5 A) and is therefore reported as a separate
+variant rather than folded into the main number.
+
+Switching to pocket-grouped holdout also corrected an earlier methodological flaw:
+molecule-level splitting let the model memorise per-pocket difficulty, inflating
+pocket_only to 0.671; grouped, it falls to 0.641 and ligand_only falls to 0.520
+(≈ random).
+
+**Interpretation.** Clash is determined neither by the ligand, nor by the pocket, nor by
+coarse relative placement — only by per-atom relative geometry, which *is* the label's
+definition. So clash is not a predictable property to be learned; it is a **directly
+computable check** (milliseconds per molecule, no training, no generalisation risk).
+
+**Consequence.** No interaction critic, and therefore no second head: the reconstructed
+unified story does not survive its own gate, and the unified line is closed. The reward
+signal itself stands, and must enter GRPO as a **hard geometric gate computed directly**,
+alongside Vina.
+
+Artifacts: `/workspace/ayb/experiments/dfe-unified-cd100/interaction_critic_gate/`
+(`gate_result.json`, `pair_increment_gate.json`, `per_mol.jsonl`, `pair_coarse.jsonl`).
 
 ## Position on A (generation SOTA)
 
@@ -108,15 +163,26 @@ Two honest caveats that must accompany any A-line claim:
 
 ## Current plan
 
+The unified line is closed — both in its original form (shared representation →
+absolute affinity) and in its reconstructed form (interaction critic). Two tracks remain.
+
 1. **Primary — docking-in-the-loop GRPO** from DF-500k as policy base. Multi-objective
-   reward (Vina + QED + SA + strain + PoseBusters gating) with KL to reference to
-   prevent reward hacking. Per-target pilot first.
-2. **Unified, reconstructed** — interaction-plausibility critic as above, gated by the
-   causal test, then wired in as an RL reward component.
-3. **Backstop** — a methodology/negative-results paper: SE(3)-safe DF diagnosis,
-   size-matched geometry advantage, the unified-screening negative result, and the
-   PDBBind ligand-bias diagnosis. Near-zero risk, monetises work already done.
+   reward (Vina + QED + SA + strain) with KL to the reference policy to prevent reward
+   hacking, and a **directly computed pocket-clash gate** — not a learned critic — as a
+   hard term. Per-target pilot first, measured against the same DF-500k start under the
+   identical sampling protocol.
+2. **Backstop — methodology / negative-results paper.** Now materially stronger than when
+   first proposed, because it carries four measured findings rather than one narrative:
+   - **49.3% of DF-500k molecules sterically clash with the pocket while passing
+     `PoseBusters(config='mol')`** (93 pockets, 10032 molecules). The field's standard
+     validity metric, as commonly configured, does not look at the protein at all.
+   - PDBBind absolute-affinity regression is ligand-marginal dominated: pair geometry
+     scores *below* ligand-only (0.320 vs 0.510) under cluster-disjoint splits.
+   - Clash is not learnable from marginals or coarse placement (delta −0.017); it is a
+     computable check, not a predictable property.
+   - Likelihood-continuation and conservative fine-tuning both degrade docking while
+     supervised loss improves — supervised convergence is not a proxy for Vina.
 
 Explicitly abandoned: extending likelihood pretraining, conservative FT hyperparameter
-search, shared-encoder absolute-affinity screening, and pure architecture/prior changes
-without an optimisation loop.
+search, shared-encoder absolute-affinity screening, a learned interaction-plausibility
+critic, and pure architecture/prior changes without an optimisation loop.
